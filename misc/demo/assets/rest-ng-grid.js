@@ -295,7 +295,7 @@
         return {
           restrict: 'EA',
           transclude: true,
-          templateUrl: './assets/rest-ng-grid.html',
+          templateUrl: 'rest-ng-grid.html',
           controller: 'MjGridController',
           controllerAs: 'mjGridCtrl',
           //scope: true,

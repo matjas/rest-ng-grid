@@ -68,7 +68,7 @@ gulp.task('copy:css', [], function () {
 });
 gulp.task('copy:html', [], function () {
   return gulp.src(['dist/*.html'])
-    .pipe(gulp.dest('misc/demo/assets'));
+    .pipe(gulp.dest('misc/demo'));
 });
 gulp.task('copy:map', [], function () {
   return gulp.src(['dist/*.map'])
