@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/matjas/rest-ng-grid.git"
   },
+  "main": "./dist/rest-ng-grid.js",
   "keywords": [
     "angular",
     "rest-ng-grid",
