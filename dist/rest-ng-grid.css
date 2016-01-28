@@ -1,0 +1,34 @@
+.mj-grid {
+  border: 1px solid #ccc;
+}
+.mj-grid .m-master {
+  background-color: #F4F4F4;
+  border-bottom: 1px solid #ccc;
+}
+.mj-grid .m-detail {
+  background-color: #fff;
+}
+.mj-grid .m-detail .m-master {
+  background-color: #fff;
+}
+.mj-grid .m-detail > td {
+  padding: 0;
+}
+.mj-grid .mj-grid {
+  padding: 10px;
+}
+.mj-grid.no-title {
+  padding: 0;
+}
+.mj-grid.no-title .mj-grid-content > table {
+  border: none;
+}
+.mj-grid.no-title > table {
+  border: none;
+}
+.mj-grid .dropdown.right .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+/*# sourceMappingURL=rest-ng-grid.css.map */
