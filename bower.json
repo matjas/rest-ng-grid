@@ -1,0 +1,26 @@
+{
+  "name": "rest-ng-grid",
+  "description": "",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/matjas/rest-ng-grid.git"
+  },
+  "keywords": [
+    "angular",
+    "rest-ng-grid",
+    "angularjs"
+  ],
+  "authors": [
+    "Maciej Jaskuła"
+  ],
+  "directories": {
+    "lib": "src/"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ]
+}
