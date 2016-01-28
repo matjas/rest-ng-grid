@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="restNgGrid.demo">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="icon" href="assets/favicon.ico" />
+  <title>Angular REST data grid</title>
+  <meta name="description" content="">
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-route.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-resource.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-touch.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-sanitize.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-mocks.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.0/ui-bootstrap-tpls.min.js"></script>
+
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="assets/demo.css"/>
+  <link rel="stylesheet" href="assets/rest-ng-grid.css"/>
+</head>
+<body class="ng-cloak" ng-controller="MainCtrl">
+<header class="navbar">
+  <div class="container">
+
+  </div>
+</header>
+<div role="main">
+  <header></header>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Angular REST data grid</h1>
+        <div>
+          <mj-grid options="categoriesGridOptions" iXtems="quotationApi.currentQuotation.categories"
+                   params="sourceParams" get-data-trigger="load.columns"
+                   add-row="addQLine" update-row="editCategory" >
+            <mj-grid options="linesGridOptions"  update-row="editQLine" ></mj-grid>
+          </mj-grid>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.container -->
+</div><!-- /.main -->
+<footer class="footer">
+  <div class="container">
+  </div>
+</footer>
+</body>
+<script src="assets/rest-ng-grid.js"></script>
+<script src="assets/app.js"></script>
+<script src="//localhost:35729/livereload.js"></script>
+</html>

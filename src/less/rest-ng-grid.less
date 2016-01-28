@@ -1,0 +1,25 @@
+// Core variables and mixins
+
+.mj-grid{
+  border:1px solid #ccc;
+  .m-master{background-color: #F4F4F4; border-bottom:1px solid #ccc;}
+  .m-detail{background-color: #fff;
+    .m-master{background-color: #fff;}
+    > td{padding:0;}
+  }
+  .mj-grid{padding:10px;}
+  &.no-title{padding:0;
+    .mj-grid-content{
+      > table{border:none;}
+    }
+    > table{border:none;}
+  }
+  .dropdown{
+    &.right{
+      .dropdown-menu{
+        left:auto;
+        right:0;
+      }
+    }
+  }
+}
