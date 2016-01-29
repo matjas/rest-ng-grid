@@ -40,7 +40,7 @@ var basePaths = {
 };
 
 var jsPath = ['src/js/**/*.js'],
-    htmlPath = 'src/templates/**/*.html',
+    htmlPath = 'src/templates/*.html',
     cssPath = 'src/less/rest-ng-grid.less',
     cssWatchPath = 'src/less/**/*.less',
     demoWatchPath = 'misc/demo/**/*.*'
@@ -67,7 +67,7 @@ gulp.task('copy:css', [], function () {
     .pipe(gulp.dest('misc/demo/assets'));
 });
 gulp.task('copy:html', [], function () {
-  return gulp.src(['dist/*.html'])
+  return gulp.src(['src/templates/*.html'])
     .pipe(gulp.dest('misc/demo'));
 });
 gulp.task('copy:map', [], function () {
@@ -119,9 +119,9 @@ gulp.task('html', function () {
       //.pipe(tplFilter)
       //.pipe(gulp.dest('dist/templates/'))
       //.pipe(tplFilter.restore());
-      .pipe(cachedTplFilter)
-      .pipe(gulp.dest('tmp/cached_templates/'))
-      .pipe(cachedTplFilter.restore())
+      //.pipe(cachedTplFilter)
+      //.pipe(gulp.dest('tmp/cached_templates/'))
+      //.pipe(cachedTplFilter.restore())
       .pipe(staticFilter)
       .pipe(gulp.dest('dist/'));
 });
@@ -250,7 +250,7 @@ gulp.task('copy', ['copy:html', 'copy:css', 'copy:js', 'copy:map'], function (){
 /////////////////////////////////////////////////////////////////////////////////////
 
 gulp.task('build', gulpsync.sync(['clean', 'css', 'build-app', 'html', 'copy']), function () {
-  return gulp.src('./src/*.html')
+  return gulp.src('./src/*.svm')
       .pipe(cachebust.references())
       .pipe(gulp.dest('dist'));
 });
