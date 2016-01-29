@@ -1,6 +1,9 @@
 .mj-grid {
   border: 1px solid #ccc;
 }
+.mj-grid table {
+  margin: 0;
+}
 .mj-grid .m-master {
   background-color: #F4F4F4;
   border-bottom: 1px solid #ccc;
