@@ -42,8 +42,17 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
     // parse the matching URL to pull out the id (/groups/:id)
     var groupId = url.split('/')[2];
 
-    var group = DataModel.updateOne(groupId, params);
+    var group = DataModel.updateGroup(groupId, params);
 
+    return [201, group, { Location: '/groups/' + groupId }];
+  });
+
+  $httpBackend.whenPUT(/\/groups\/\d+/).respond(function(method, url, data) {
+    var params = angular.fromJson(data);
+
+    // parse the matching URL to pull out the id (/groups/:id)
+    var groupId = url.split('/')[2];
+    var group = DataModel.updateGroup(params);
     return [201, group, { Location: '/groups/' + groupId }];
   });
 

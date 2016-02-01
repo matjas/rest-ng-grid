@@ -164,7 +164,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
     return lastId + 1;
   };
 
-  this.updateOne = function(dataItem) {
+  this.updateGroup = function(dataItem) {
     // find the game that matches that id
     var groups = this.getData();
     var match = null;
@@ -176,7 +176,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
       }
     }
     if(!angular.isObject(match)) {
-      return {};
+      return {}
     }
     angular.extend(match, dataItem);
     return match;

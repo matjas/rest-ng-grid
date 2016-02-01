@@ -76,6 +76,22 @@
           );
 
           return q.promise
+        },
+        update: function (url, data) {
+          var that = this,
+            q = $q.defer();
+          $http.put(url, data).then(function successCallback(response) {
+              if (response) {
+                q.resolve(response)
+              }
+            }, function errorCallback(response) {
+              if (response) {
+                q.reject(response);
+              }
+            }
+          );
+
+          return q.promise
         }
 
       }
@@ -209,12 +225,15 @@
       });
 
       this.addItem = function (item) {
-        $scope.addRow(item).then(function (result){
-          $scope.items.push(result);
-        }, function(){
-          console.log('handle error');
-        });
-
+        if($scope.addRow){
+          $scope.addRow(item).then(function (result){
+            $scope.items.push(result);
+          }, function(){
+            console.log('handle error');
+          });
+        } else {
+          console.log('add item');
+        }
       };
 
       this.addChildItem = function (item) {
@@ -226,7 +245,18 @@
       };
 
       this.editItem = function (item) {
-        $scope.updateRow(item);
+        if($scope.updateRow){
+          $scope.updateRow(item).then(function(result){
+            angular.extend(item, result);
+          }, function(){
+            console.log('save internal');
+          });
+        } else {
+          var url = dataService.urlBuilder(mjGridCtrl.apiUrl.update, $scope.params);
+          mjGridCtrl.dataService.update(url, item).then(function (response) {
+            angular.extend(item, response.data);
+          });
+        }
       };
 
       this.ModalInstanceDelete = function ($scope, $modalInstance, name) {
@@ -314,7 +344,7 @@
       return {
         restrict: 'EA',
         transclude: true,
-        template: '<div class="mj-grid" data-ng-class="{\'no-title\': mjGridCtrl.titleList.length == 0}">\n  <div class="mj-grid-header">\n    <div class="mj-grid-header-wrap">\n      <table role="grid" data-ng-if="mjGridCtrl.titleList.length > 0" class="table table-responsive out">\n        <thead role="rowgroup">\n        <tr role="row">\n          <th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"\n              data-ng-repeat="t in mjGridCtrl.titleList">\n            {{ t.title }}\n          </th>\n          <th  class="w-30" data-ng-if="mjGridCtrl.apiUrl.save">\n            <button class="btn btn-primary" ng-click="mjGridCtrl.addItem()">Add item</button>\n          </th>\n        </tr>\n        </thead>\n      </table>\n    </div>\n  </div>\n  <div class="mj-grid-content">\n    <!--{{ $id }}-->\n    <table role="grid" class="table table-responsive out">\n      <tbody role="rowgroup">\n      <tr class="m-master"\n          data-ng-repeat-start="item in items" data-ng-click="mjGridCtrl.toggleRow($event, item)">\n        <td ng-style="{{ c.style }}" colspan="{{ c.colspan }}"\n            data-ng-repeat="c in mjGridCtrl.columnList">\n\t\t\t\t\t<span data-ng-if="mjGridCtrl.isTranscluded && $index == 0" class="sub fa"\n                data-ng-class="{\'fa-plus-square-o\': !item.isOpen, \'fa-minus-square-o\': item.isOpen}"></span>\n          <!--<p data-ng-if="mjGridCtrl.isTranscluded && $index == 0">-->\n          <!--&lt;!&ndash;{{ item }}&ndash;&gt;-->\n          <!--<span><strong>{{ mjGridCtrl.getProperty(item, c.group) }} &nbsp;</strong></span>-->\n          <!--</p>-->\n\t\t\t\t\t<span>\n\t\t\t\t\t\t{{ mjGridCtrl.getValue(item, c.field, c.filter) }}\n\t\t\t\t\t</span>\n        </td>\n        <td class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">\n          <div class="dropdown right" dropdown>\n            <a href=""  class="dropdown-toggle" dropdown-toggle>\n              <i class="fa fa-cogs small"></i>\n            </a>\n            <ul class="dropdown-menu extended small">\n              <li data-ng-if="mjGridCtrl.apiUrl.save">\n                <a href="" data-ng-click="mjGridCtrl.addChildItem(item)"><span class="fa fa-plus"></span> Add </a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.update">\n                <a href="" data-ng-click="mjGridCtrl.editItem(item)"><span class="fa fa-pencil"></span> Edit</a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.delete">\n                <a href="" data-ng-click="mjGridCtrl.deleteItem(item)"><span class="fa fa-times"></span>Delete</a>\n              </li>\n            </ul>\n          </div>\n        </td>\n      </tr>\n      <tr data-ng-show="mjGridCtrl.isTranscluded && item.isOpen" class="m-detail"\n          data-ng-repeat-end>\n        <td colspan="{{ mjGridCtrl.titleList.length + 1 }}" my-transclude current-item="item"\n            params="params"></td>\n      </tr>\n      </tbody>\n    </table>\n    <!--<a data-ng-click="mjGridCtrl.checkList()">check</a>-->\n  </div>\n  <div class="mj-grid-footer"></div>\n</div>',
+        template: '<div class="mj-grid" data-ng-class="{\'no-title\': mjGridCtrl.titleList.length == 0}">\n  <div class="mj-grid-header">\n    <div class="mj-grid-header-wrap">\n      <table role="grid" data-ng-if="mjGridCtrl.titleList.length > 0" class="table table-responsive out">\n        <thead role="rowgroup">\n        <tr role="row">\n          <th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"\n              data-ng-repeat="t in mjGridCtrl.titleList">\n            {{ t.title }}\n          </th>\n          <th  class="w-30" data-ng-if="mjGridCtrl.apiUrl.save">\n            <button class="btn btn-primary" ng-click="mjGridCtrl.addItem()">Add item</button>\n          </th>\n        </tr>\n        </thead>\n      </table>\n    </div>\n  </div>\n  <div class="mj-grid-content">\n    <!--{{ $id }}-->\n    <table role="grid" class="table table-responsive out">\n      <tbody role="rowgroup">\n      <tr class="m-master"\n          data-ng-repeat-start="item in items" data-ng-click="mjGridCtrl.toggleRow($event, item)">\n        <td ng-style="{{ c.style }}" colspan="{{ c.colspan }}"\n            data-ng-repeat="c in mjGridCtrl.columnList">\n\t\t\t\t\t<span data-ng-if="mjGridCtrl.isTranscluded && $index == 0" class="sub fa"\n                data-ng-class="{\'fa-plus-square-o\': !item.isOpen, \'fa-minus-square-o\': item.isOpen}"></span>\n          <!--<p data-ng-if="mjGridCtrl.isTranscluded && $index == 0">-->\n          <!--&lt;!&ndash;{{ item }}&ndash;&gt;-->\n          <!--<span><strong>{{ mjGridCtrl.getProperty(item, c.group) }} &nbsp;</strong></span>-->\n          <!--</p>-->\n\t\t\t\t\t<span>\n\t\t\t\t\t\t{{ mjGridCtrl.getValue(item, c.field, c.filter) }}\n\t\t\t\t\t</span>\n        </td>\n        <td class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">\n          <div class="dropdown right" dropdown>\n            <a href=""  class="dropdown-toggle" dropdown-toggle>\n              <i class="fa fa-cogs small"></i>\n            </a>\n            <ul class="dropdown-menu extended small">\n              <li data-ng-if="mjGridCtrl.apiUrl.save || updateRow">\n                <a href="" data-ng-click="mjGridCtrl.addChildItem(item)"><span class="fa fa-plus"></span> Add </a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.update">\n                <a href="" data-ng-click="mjGridCtrl.editItem(item)"><span class="fa fa-pencil"></span> Edit</a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.delete">\n                <a href="" data-ng-click="mjGridCtrl.deleteItem(item)"><span class="fa fa-times"></span>Delete</a>\n              </li>\n            </ul>\n          </div>\n        </td>\n      </tr>\n      <tr data-ng-show="mjGridCtrl.isTranscluded && item.isOpen" class="m-detail"\n          data-ng-repeat-end>\n        <td colspan="{{ mjGridCtrl.titleList.length + 1 }}" my-transclude current-item="item"\n            params="params"></td>\n      </tr>\n      </tbody>\n    </table>\n    <!--<a data-ng-click="mjGridCtrl.checkList()">check</a>-->\n  </div>\n  <div class="mj-grid-footer"></div>\n</div>',
         controller: 'MjGridController',
         controllerAs: 'mjGridCtrl',
         //scope: true,

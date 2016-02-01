@@ -24,8 +24,10 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
 
   //Update group
   $scope.updateGroup = function(item){
-    var updatedItem = $scope.dataModel.updateOne(item);
-    return updatedItem;
+    var q = $q.defer();
+    var updatedItem = $scope.dataModel.updateGroup(item);
+    q.resolve(updatedItem);
+    return q.promise;
   };
 
   $scope.productsGridOptions = {
