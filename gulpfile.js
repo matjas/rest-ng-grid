@@ -58,17 +58,13 @@ if (gutil.env.dev === true) {
 
 var cachedTemplates = []
 
-gulp.task('copy:js', [], function () {
-  return gulp.src(['dist/*.js'])
-    .pipe(gulp.dest('misc/demo/assets'))
-});
+//gulp.task('copy:js', [], function () {
+//  return gulp.src(['dist/*.js'])
+//    .pipe(gulp.dest('misc/demo/assets'))
+//});
 gulp.task('copy:css', [], function () {
   return gulp.src(['dist/*.css'])
     .pipe(gulp.dest('misc/demo/assets'));
-});
-gulp.task('copy:html', [], function () {
-  return gulp.src(['src/templates/*.html'])
-    .pipe(gulp.dest('misc/demo'));
 });
 gulp.task('copy:map', [], function () {
   return gulp.src(['dist/*.map'])
@@ -94,12 +90,13 @@ gulp.task('build-app', function () {
     //.pipe(gulpIf(isProduction, cachebust.resources()))
     .pipe(gulpIf(sourceMap, sourcemaps.write('./')))
     .pipe(gulpIf(isProduction, uglify())).on('error', gutil.log)
-    .pipe(gulp.dest('./dist/'));
+    .pipe(gulp.dest('./dist/'))
+    .pipe(gulp.dest('./misc/demo/assets'));
 
 });
 
 gulp.task('html', function () {
-  var tplFilterList = [ ],
+  var tplFilterList = [],
       tplFilter = filter(tplFilterList),
       staticFilter = [ '**/*'],
       cachedTplFilter = null;
@@ -122,8 +119,9 @@ gulp.task('html', function () {
       //.pipe(cachedTplFilter)
       //.pipe(gulp.dest('tmp/cached_templates/'))
       //.pipe(cachedTplFilter.restore())
-      .pipe(staticFilter)
-      .pipe(gulp.dest('dist/'));
+      //.pipe(staticFilter)
+      .pipe(gulp.dest('./misc/demo'))
+      .pipe(gulp.dest('./dist/'));
 });
 
 
@@ -141,19 +139,19 @@ gulp.task('css', function () {
       .pipe(isProduction ? cssmin() : gutil.noop())
       .pipe(gulpIf(sourceMap, sourcemaps.write('./')))
       .pipe(size())
-      .pipe(gulp.dest('dist/'));
+      .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('livereload:notify:html', gulpsync.sync(['html', 'copy:html']), function () {
+gulp.task('livereload:notify:html', gulpsync.sync(['html']), function () {
   return livereload.changed('*')
 });
-gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:js', 'copy:map']), function () {
+gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map']), function () {
   return livereload.changed('*')
 });
 gulp.task('livereload:notify:css', gulpsync.sync(['css', 'copy:css', 'copy:map']), function () {
   return livereload.changed('*')
 });
-gulp.task('livereload:notify:demo', ['build'], function () {
+gulp.task('livereload:notify:demo', [], function () {
   return livereload.changed('*')
 });
 
@@ -239,7 +237,7 @@ var changeEvent = function (evt) {
 };
 
 //copy
-gulp.task('copy', ['copy:html', 'copy:css', 'copy:js', 'copy:map'], function (){
+gulp.task('copy', ['copy:css', 'copy:map'], function (){
 
 });
 
@@ -249,8 +247,4 @@ gulp.task('copy', ['copy:html', 'copy:css', 'copy:js', 'copy:map'], function (){
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('build', gulpsync.sync(['clean', 'css', 'build-app', 'html', 'copy']), function () {
-  return gulp.src('./src/*.svm')
-      .pipe(cachebust.references())
-      .pipe(gulp.dest('dist'));
-});
+gulp.task('build', gulpsync.sync(['clean', 'css', 'build-app', 'html', 'copy']));
