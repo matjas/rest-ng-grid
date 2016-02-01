@@ -1,4 +1,3 @@
-
 (function (window, angular, undefined) {
   'use strict';
   var isDefined = angular.isDefined,
@@ -292,7 +291,7 @@
 
         $scope.$watch('getDataTrigger', function(value){
           if (value) {
-            //$scope.items = [];
+            $scope.items = [];
             getQuery($scope.params);
             $scope.getDataTrigger = false;
           }

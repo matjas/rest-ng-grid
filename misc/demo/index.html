@@ -39,8 +39,8 @@
             <button class="btn btn-primary" ng-click="getGroups()">Get Groups</button>
             <!--<button class="btn btn-primary" ng-click="addNewGroup()">Add new group</button>-->
           </p>
-          <mj-grid options="groupsGridOptions" iXtems="dataModel.dataGroups"
-                   params="sourceParams" get-data-trigger="load.groups" add-row="addNewGroup"
+          <mj-grid options="groupsGridOptions" items="dataModel.dataGroups"
+                   params="sourceParams" geXt-data-trigger="load.groups" add-row="addNewGroup"
                    add-child-row="addQLine" update-row="updateGroup" >
             <mj-grid options="productsGridOptions"  update-row="editQLine" ></mj-grid>
           </mj-grid>
