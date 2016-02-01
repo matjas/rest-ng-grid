@@ -88,7 +88,7 @@ gulp.task('clean', function (cb) {
 
 gulp.task('build-app', function () {
 
-  return gulp.src(['./src/js/rest-ng-grid.js'])
+  return gulp.src(['./src/js/rest-ng-grid-src.js'])
     .pipe(gulpIf(sourceMap, sourcemaps.init({loadMaps: true})))
     .pipe(gp_concat('rest-ng-grid.js'))
     //.pipe(gulpIf(isProduction, cachebust.resources()))
