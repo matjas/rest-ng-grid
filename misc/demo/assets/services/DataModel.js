@@ -1,4 +1,4 @@
-angular.module('restNgGrid.demo').service('DataModel', function DataModel() {
+angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', function DataModel($timeout, $q) {
 
   //options
   this.dataGroups = [
@@ -100,13 +100,18 @@ angular.module('restNgGrid.demo').service('DataModel', function DataModel() {
   };
 
   this.addGroup = function(){
-    var lastId = getLastId(this.dataGroups),
-        newGroup= {
-          id: lastId + 1,
-          name: 'NewGroup' + (lastId + 1)
-        };
-    this.dataGroups.push(newGroup);
-    return newGroup;
+    var q = $q.defer(),
+        that = this,
+        lastId = getLastId(that.dataGroups);
+    $timeout(function(){
+      var newGroup = {
+        id: lastId + 1,
+        name: 'NewGroup' + (lastId + 1)
+      };
+      that.dataGroups.push(newGroup);
+      q.resolve(newGroup);
+    },500);
+    return q.promise
   };
 
   this.findOne = function(groupId) {
@@ -148,7 +153,7 @@ angular.module('restNgGrid.demo').service('DataModel', function DataModel() {
     var newId = this.newId();
     dataItem = dataItem || {name: 'NewGroup', id: null}
     dataItem.id = newId;
-    this.dataGroups.push(dataItem);
+    //this.dataGroups.push(dataItem);
     return dataItem;
   };
 
@@ -207,4 +212,4 @@ angular.module('restNgGrid.demo').service('DataModel', function DataModel() {
     return lastId;
   }
 
-});
+}]);

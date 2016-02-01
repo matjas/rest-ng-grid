@@ -1,9 +1,10 @@
-angular.module('restNgGrid.demo').controller('MainCtrl', function($scope, Resource, Http, DataModel) {
+angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', 'Http', 'DataModel','$q', function($scope, Resource, Http, DataModel, $q) {
 
   // putting our server data on scope to display it for learning purposes
   $scope.dataModel = DataModel;
   // trigger for loading groups
   $scope.load = {groups: false};
+  $scope.dataGroups = angular.copy($scope.dataModel.dataGroups);
 
   $scope.sourceParams = {groupId: null};
 
@@ -14,8 +15,11 @@ angular.module('restNgGrid.demo').controller('MainCtrl', function($scope, Resour
 
   //Add new group
   $scope.addNewGroup = function(){
-    var newItem = $scope.dataModel.addGroup();
-    return newItem;
+    var q = $q.defer();
+    $scope.dataModel.addGroup().then(function(result){
+      q.resolve(result);
+    });
+    return q.promise;
   };
 
   //Update group
@@ -131,4 +135,4 @@ angular.module('restNgGrid.demo').controller('MainCtrl', function($scope, Resour
     }
   };
 
-});
+}]);
