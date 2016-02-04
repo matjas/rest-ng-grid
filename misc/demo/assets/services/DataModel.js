@@ -182,14 +182,13 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
     return match;
   };
 
-  this.deleteOne = function(gameid) {
-    // find the game that matches that id
-    var games = this.getData();
+  this.deleteGroup = function(groupId) {
+    var groups = this.getData();
     var match = false;
-    for (var i=0; i < games.length; i++) {
-      if(games[i].gameid == gameid) {
+    for (var i=0; i < groups.length; i++) {
+      if(groups[i].id == groupId) {
         match = true;
-        games.splice(i, 1);
+        groups.splice(i, 1);
         break;
       }
     }

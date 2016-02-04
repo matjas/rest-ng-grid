@@ -1,4 +1,4 @@
-angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', 'Http', 'DataModel','$q', function($scope, Resource, Http, DataModel, $q) {
+angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', 'Http', 'DataModel','$q', '$uibModal', function($scope, Resource, Http, DataModel, $q, $uibModal) {
 
   // putting our server data on scope to display it for learning purposes
   $scope.dataModel = DataModel;
@@ -30,6 +30,37 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
     return q.promise;
   };
 
+  //Delete group
+  $scope.ModalInstanceDelete = function ($scope, $uibModalInstance, name) {
+    $scope.deleteObjectName = name;
+    $scope.confirm = function (result) {
+      return $uibModalInstance.close(result);
+    };
+    return $scope.cancel = function () {
+      return $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+  $scope.deleteGroup = function(item){
+    var q = $q.defer();
+    $uibModal.open({
+      templateUrl: 'templates/delete.html',
+      controller: $scope.ModalInstanceDelete,
+      animation: false,
+      backdrop: true,
+      resolve: {
+        name: function () {
+          return item.name;
+        }
+      }
+    }).result.then(function () {
+      q.resolve($scope.dataModel.deleteGroup(item.id));
+    }, function(){
+      q.reject(false);
+    });
+    return q.promise;
+  };
+
   $scope.productsGridOptions = {
     hierarchy: true,
     dataSource: {
@@ -44,6 +75,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
       parentId: "groupId",
       itemId: "productId"
     },
+    isEditable: true,
     columns: {
 
       /*titles: [
@@ -94,11 +126,12 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         query: "/groups",
         save: "/groups",
         update: "/groups/{groupId}",
-        "delete": "/groups/{groupId}"
+        delete: "/groups/{groupId}"
       },
       //arrayListParam: '',
       itemId: "groupId"
     },
+    isEditable: true,
     columns: {
       titles: [
         {

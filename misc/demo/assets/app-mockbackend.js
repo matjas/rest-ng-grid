@@ -56,16 +56,17 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
     return [201, group, { Location: '/groups/' + groupId }];
   });
 
-  //// this is the update of an existing resource (ngResource does not send PUT for update)
-  //$httpBackend.whenDELETE(/\/games\/\d+/).respond(function(method, url, data) {
-  //  // parse the matching URL to pull out the id (/games/:id)
-  //  var gameid = url.split('/')[2];
-  //
-  //  ServerDataModel.deleteOne(gameid);
-  //
-  //  return [204, {}, {}];
-  //});
+
+  $httpBackend.whenDELETE(/\/groups\/\d+/).respond(function(method, url, data) {
+    // parse the matching URL to pull out the id (/groups/:id)
+    var groupId = url.split('/')[2];
+
+    DataModel.deleteGroup(groupId);
+
+    return [204, {}, {}];
+  });
 
   //$httpBackend.whenGET(/rest-ng-grid/).passThrough();
+  $httpBackend.whenGET(/templates\/delete.html/).passThrough();
 
 });
