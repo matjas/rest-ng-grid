@@ -40,9 +40,9 @@
             <!--<button class="btn btn-primary" ng-click="addNewGroup()">Add new group</button>-->
           </p>
           <mj-grid options="groupsGridOptions" iXtems="dataGroups"
-                   params="sourceParams" get-data-trigger="load.groups" aXdd-row="addNewGroup"
-                   aXdd-child-row="addProduct" update-row="updateGroup" dXelete-row="deleteGroup" >
-            <mj-grid options="productsGridOptions"  update-row="editQLine" ></mj-grid>
+                   params="sourceParams" get-data-trigger="load.groups" add-row="addNewGroup"
+                   add-child-row="addProduct" update-row="updateGroup" delete-row="deleteGroup" >
+            <mj-grid options="productsGridOptions"  update-row="updateProduct" delete-row="deleteProduct" ></mj-grid>
           </mj-grid>
         </div>
       </div>

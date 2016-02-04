@@ -119,7 +119,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
   this.addGroupHttp = function(dataItem) {
     // must calculate a unique ID to add the new data
     var newId = this.newId(this.dataGroups);
-    dataItem = dataItem || {name: 'NewGroup', id: null};
+    dataItem = {name: 'NewGroup', id: null};
     dataItem.id = newId;
     this.dataGroups.push(dataItem);
     //this.dataGroups.push(dataItem);
@@ -217,6 +217,37 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
       q.resolve(newProduct);
     },500);
     return q.promise
+  };
+
+  this.updateProduct = function(dataItem) {
+    // find the game that matches that id
+    var products = this.getProductList();
+    var match = null;
+    dataItem.name = "UpdatedProduct";
+    for (var i=0; i < products.length; i++) {
+      if(products[i].id == dataItem.id) {
+        match = products[i];
+        break;
+      }
+    }
+    if(!angular.isObject(match)) {
+      return {}
+    }
+    angular.extend(match, dataItem);
+    return match;
+  };
+
+  this.deleteProduct = function(groupId, productId) {
+    var products = this.getProductList();
+    var match = null;
+    for (var i=0; i < products.length; i++) {
+      if(products[i].id == productId) {
+        match = true;
+        products.splice(i, 1);
+        break;
+      }
+    }
+    return match;
   };
 
   //Helpers

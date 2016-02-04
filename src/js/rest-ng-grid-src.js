@@ -131,6 +131,7 @@
       this.parentId = this.options.dataSource.parentId || 'id';
       this.itemId = this.options.dataSource.itemId || 'id';
       this.childItemId = this.options.dataSource.childItemId;
+      this.paramId = this.options.dataSource.paramId || 'id';
 
       this.addColumns = function (scope, options) {
 
@@ -194,8 +195,8 @@
         if(mjGridCtrl.isTranscluded){
           item.isOpen = !item.isOpen;
           if (item.isOpen) {
-            if(mjGridCtrl.childItemId){
-              $scope.params[mjGridCtrl.childItemId] = item[mjGridCtrl.itemId];
+            if(mjGridCtrl.paramId){
+              $scope.params[mjGridCtrl.paramId] = item[mjGridCtrl.itemId];
             }
             $scope.params = deepMerge(item, $scope.params);
             $rootScope.$broadcast('clickRow', {id: item[mjGridCtrl.parentId]});
@@ -234,9 +235,6 @@
       }
 
       var onNewRowListener = $rootScope.$on('addNewRow', function (event, data) {
-          //console.log($scope.$parent.parentItem, '$scope.$parent.parentItem.id');
-          //console.log(data.item, 'data.item');
-          //console.log(mjGridCtrl.parentId, 'mjGridCtrl.parentId');
           if ($scope.$parent.parentItem && $scope.$parent.parentItem[mjGridCtrl.itemId] === data.item[mjGridCtrl.parentId]) {
             if(!data.isExternal){
               if (!$scope.items) {
@@ -252,16 +250,16 @@
           }
       });
 
-      this.addItem = function (item) {
+      this.addItem = function () {
         if($scope.addRow){
-          $scope.addRow(item).then(function (result){
+          $scope.addRow().then(function (result){
             $scope.items.push(result);
           }, function(){
             console.log('handle error');
           });
         } else if(this.apiUrl.save){
           var url = dataService.urlBuilder(mjGridCtrl.apiUrl.save, $scope.params);
-          mjGridCtrl.dataService.save(url, item).then(function (response) {
+          mjGridCtrl.dataService.save(url, {}).then(function (response) {
             $scope.items.push(response.data);
           });
         }
@@ -289,6 +287,7 @@
             console.log('handle error');
           });
         } else if(this.apiUrl.update) {
+          $scope.params[mjGridCtrl.paramId] = item[mjGridCtrl.itemId];
           var url = dataService.urlBuilder(mjGridCtrl.apiUrl.update, $scope.params);
           mjGridCtrl.dataService.update(url, item).then(function (response) {
             angular.extend(item, response.data);
@@ -309,7 +308,7 @@
             return false;
           });
         } else if(that.apiUrl.delete){
-          $scope.params[mjGridCtrl.childItemId] = item[mjGridCtrl.itemId];
+          $scope.params[mjGridCtrl.paramId] = item[mjGridCtrl.itemId];
           var url = dataService.urlBuilder(mjGridCtrl.apiUrl.delete, $scope.params);
           mjGridCtrl.dataService.delete(url).then(function (response) {
             var idx = $scope.items.indexOf(item);
@@ -367,7 +366,7 @@
       return {
         restrict: 'EA',
         transclude: true,
-        template: '<div class="mj-grid" data-ng-class="{\'no-title\': mjGridCtrl.titleList.length == 0}">\n  <div class="mj-grid-header">\n    <div class="mj-grid-header-wrap">\n      <table role="grid" data-ng-if="mjGridCtrl.titleList.length > 0" class="table table-responsive out">\n        <thead role="rowgroup">\n        <tr role="row">\n          <th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"\n              data-ng-repeat="t in mjGridCtrl.titleList">\n            {{ t.title }}\n          </th>\n          <th  class="w-30" data-ng-if="mjGridCtrl.apiUrl.save">\n            <button class="btn btn-primary" ng-click="mjGridCtrl.addItem()">Add item</button>\n          </th>\n        </tr>\n        </thead>\n      </table>\n    </div>\n  </div>\n  <div class="mj-grid-content">\n    <!--{{ $id }}-->\n    <table role="grid" class="table table-responsive out">\n      <tbody role="rowgroup">\n      <tr class="m-master"\n          data-ng-repeat-start="item in items" data-ng-click="mjGridCtrl.toggleRow($event, item)">\n        <td ng-style="{{ c.style }}" colspan="{{ c.colspan }}"\n            data-ng-repeat="c in mjGridCtrl.columnList">\n\t\t\t\t\t<span data-ng-if="mjGridCtrl.isTranscluded && $index == 0" class="sub fa"\n                data-ng-class="{\'fa-plus-square-o\': !item.isOpen, \'fa-minus-square-o\': item.isOpen}"></span>\n          <!--<p data-ng-if="mjGridCtrl.isTranscluded && $index == 0">-->\n          <!--&lt;!&ndash;{{ item }}&ndash;&gt;-->\n          <!--<span><strong>{{ mjGridCtrl.getProperty(item, c.group) }} &nbsp;</strong></span>-->\n          <!--</p>-->\n\t\t\t\t\t<span>\n\t\t\t\t\t\t{{ mjGridCtrl.getValue(item, c.field, c.filter) }}\n\t\t\t\t\t</span>\n        </td>\n        <td class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">\n          <div class="dropdown right" uib-dropdown>\n            <a href=""  class="dropdown-toggle" uib-dropdown-toggle>\n              <i class="fa fa-cogs small"></i>\n            </a>\n            <ul uib-dropdown-menu class="dropdown-menu extended small">\n              <li data-ng-if="mjGridCtrl.apiUrl.save || addChildRow">\n                <a href="" data-ng-click="mjGridCtrl.addChildItem(item)"><span class="fa fa-plus"></span> Add </a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.update || updateRow">\n                <a href="" data-ng-click="mjGridCtrl.editItem(item)"><span class="fa fa-pencil"></span> Edit</a>\n              </li>\n              <li data-ng-if="(mjGridCtrl.apiUrl.delete || deleteRow) && options.isEditable">\n                <a href="" data-ng-click="mjGridCtrl.deleteItem(item)"><span class="fa fa-times"></span>Delete</a>\n              </li>\n            </ul>\n          </div>\n        </td>\n      </tr>\n      <tr data-ng-show="mjGridCtrl.isTranscluded && item.isOpen" class="m-detail"\n          data-ng-repeat-end>\n        <td colspan="{{ mjGridCtrl.titleList.length + 1 }}" my-transclude current-item="item"\n            params="params"></td>\n      </tr>\n      </tbody>\n    </table>\n    <!--<a data-ng-click="mjGridCtrl.checkList()">check</a>-->\n  </div>\n  <div class="mj-grid-footer"></div>\n</div>',
+        template: '<div class="mj-grid" data-ng-class="{\'no-title\': mjGridCtrl.titleList.length == 0}">\n  <div class="mj-grid-header">\n    <div class="mj-grid-header-wrap">\n      <table role="grid" data-ng-if="mjGridCtrl.titleList.length > 0" class="table table-responsive out">\n        <thead role="rowgroup">\n        <tr role="row">\n          <th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"\n              data-ng-repeat="t in mjGridCtrl.titleList">\n            {{ t.title }}\n          </th>\n          <th  class="w-30" data-ng-if="mjGridCtrl.apiUrl.save">\n            <button class="btn btn-primary" ng-click="mjGridCtrl.addItem()">Add item</button>\n          </th>\n        </tr>\n        </thead>\n      </table>\n    </div>\n  </div>\n  <div class="mj-grid-content">\n    <!--{{ $id }}-->\n    <table role="grid" class="table table-responsive out">\n      <tbody role="rowgroup">\n      <tr class="m-master"\n          data-ng-repeat-start="item in items" data-ng-click="mjGridCtrl.toggleRow($event, item)">\n        <td ng-style="{{ c.style }}" colspan="{{ c.colspan }}"\n            data-ng-repeat="c in mjGridCtrl.columnList">\n\t\t\t\t\t<span data-ng-if="mjGridCtrl.isTranscluded && $index == 0" class="sub fa"\n                data-ng-class="{\'fa-plus-square-o\': !item.isOpen, \'fa-minus-square-o\': item.isOpen}"></span>\n          <!--<p data-ng-if="mjGridCtrl.isTranscluded && $index == 0">-->\n          <!--&lt;!&ndash;{{ item }}&ndash;&gt;-->\n          <!--<span><strong>{{ mjGridCtrl.getProperty(item, c.group) }} &nbsp;</strong></span>-->\n          <!--</p>-->\n\t\t\t\t\t<span>\n\t\t\t\t\t\t{{ mjGridCtrl.getValue(item, c.field, c.filter) }}\n\t\t\t\t\t</span>\n        </td>\n        <td class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">\n          <div class="dropdown right" uib-dropdown>\n            <a href=""  class="dropdown-toggle" uib-dropdown-toggle>\n              <i class="fa fa-cogs small"></i>\n            </a>\n            <ul uib-dropdown-menu class="dropdown-menu extended small">\n              <li data-ng-if="(mjGridCtrl.apiUrl.save || addChildRow) && mjGridCtrl.isTranscluded">\n                <a href="" data-ng-click="mjGridCtrl.addChildItem(item, params)"><span class="fa fa-plus"></span> Add </a>\n              </li>\n              <li data-ng-if="mjGridCtrl.apiUrl.update || updateRow">\n                <a href="" data-ng-click="mjGridCtrl.editItem(item, params)"><span class="fa fa-pencil"></span> Edit</a>\n              </li>\n              <li data-ng-if="(mjGridCtrl.apiUrl.delete || deleteRow) && options.isEditable">\n                <a href="" data-ng-click="mjGridCtrl.deleteItem(item, params)"><span class="fa fa-times"></span>Delete</a>\n              </li>\n            </ul>\n          </div>\n        </td>\n      </tr>\n      <tr data-ng-show="mjGridCtrl.isTranscluded && item.isOpen" class="m-detail"\n          data-ng-repeat-end>\n        <td colspan="{{ mjGridCtrl.titleList.length + 1 }}" my-transclude current-item="item"\n            params="params"></td>\n      </tr>\n      </tbody>\n    </table>\n    <!--<a data-ng-click="mjGridCtrl.checkList()">check</a>-->\n  </div>\n  <div class="mj-grid-footer"></div>\n</div>',
         controller: 'MjGridController',
         controllerAs: 'mjGridCtrl',
         //scope: true,

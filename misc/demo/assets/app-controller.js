@@ -6,7 +6,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
   $scope.load = {groups: false};
   $scope.dataGroups = angular.copy($scope.dataModel.dataGroups);
 
-  $scope.sourceParams = {groupId: null};
+  $scope.sourceParams = {groupId: null, productId: null};
 
   //Fill grid
   $scope.getGroups = function(){
@@ -23,7 +23,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
   };
 
   //Update group
-  $scope.updateGroup = function(item){
+  $scope.updateGroup = function(item, params){
     var q = $q.defer();
     var updatedItem = $scope.dataModel.updateGroup(item);
     q.resolve(updatedItem);
@@ -41,7 +41,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
     };
   };
 
-  $scope.deleteGroup = function(item){
+  $scope.deleteGroup = function(item, params){
     var q = $q.defer();
     $uibModal.open({
       templateUrl: 'templates/delete.html',
@@ -70,6 +70,34 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
     return q.promise;
   };
 
+  //Update product
+  $scope.updateProduct = function(item, params){
+    var q = $q.defer();
+    var updatedItem = $scope.dataModel.updateProduct(item);
+    q.resolve(updatedItem);
+    return q.promise;
+  };
+
+  $scope.deleteProduct = function(item, params){
+    var q = $q.defer();
+    $uibModal.open({
+      templateUrl: 'templates/delete.html',
+      controller: $scope.ModalInstanceDelete,
+      animation: false,
+      backdrop: true,
+      resolve: {
+        name: function () {
+          return item.name;
+        }
+      }
+    }).result.then(function () {
+      q.resolve($scope.dataModel.deleteProduct(null, item.id));
+    }, function(){
+      q.reject(false);
+    });
+    return q.promise;
+  };
+
   //GRID OPTIONS
   $scope.productsGridOptions = {
     hierarchy: true,
@@ -79,12 +107,13 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         get: "",
         query: "/groups/{groupId}/products",
         save: "/groups/{groupId}/products",
-        update: "../../api/tenants/quotations/{quotationId}/quotationCategories/{categoryId}/quotationLines/{quotationLineId}",
-        "delete": "../../api/tenants/quotations/{quotationId}/quotationCategories/{categoryId}/quotationLines/{quotationLineId}"
+        update: "/groups/{groupId}/products/{productId}",
+        delete: "/groups/{groupId}/products/{productId}"
       },
       parentId: "groupId",
       itemId: "id",
-      childItemId: ""
+      childItemId: "",
+      paramId: "productId"
     },
     isEditable: true,
     columns: {
@@ -142,7 +171,8 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
       //arrayListParam: '',
       parentId: "",
       itemId: "id",
-      childItemId: "groupId"
+      childItemId: "groupId",
+      paramId: "groupId"
     },
     isEditable: true,
     columns: {

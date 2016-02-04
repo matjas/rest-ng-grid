@@ -26,7 +26,7 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
     return [201, group, { Location: '/groups/' + groupId }];
   });
 
-  $httpBackend.whenPUT(/\/groups\/\d+/).respond(function(method, url, data) {
+  $httpBackend.whenPUT(/\/groups\/\d+$/).respond(function(method, url, data) {
     var params = angular.fromJson(data);
 
     // parse the matching URL to pull out the id (/groups/:id)
@@ -36,7 +36,7 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
   });
 
 
-  $httpBackend.whenDELETE(/\/groups\/\d+/).respond(function(method, url, data) {
+  $httpBackend.whenDELETE(/\/groups\/\d+$/).respond(function(method, url, data) {
     // parse the matching URL to pull out the id (/groups/:id)
     var groupId = url.split('/')[2];
 
@@ -46,7 +46,7 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
   });
 
   //PRODUCTS
-  $httpBackend.whenGET(/\/groups\/\d+\/products/).respond(function(method, url, data) {
+  $httpBackend.whenGET(/\/groups\/\d+\/products$/).respond(function(method, url, data) {
     // parse the matching URL to pull out the id (/groups/:id/products)
     var groupId = url.split('/')[2];
 
@@ -55,13 +55,33 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
     return [200, products, {}];
   });
 
-  $httpBackend.whenPOST(/\/groups\/\d+\/products/).respond(function(method, url, data) {
+  $httpBackend.whenPOST(/\/groups\/\d+\/products$/).respond(function(method, url, data) {
     var params = angular.fromJson(data);
 
     var groupId = url.split('/')[2];
     var product = DataModel.addProductHttp(groupId, params);
 
     return [201, product, { Location: '/groups/' + groupId + '/products'}];
+  });
+
+  $httpBackend.whenPUT(/\/groups\/\d+\/products\/\d+$/).respond(function(method, url, data) {
+    var params = angular.fromJson(data);
+
+    // parse the matching URL to pull out the id (/groups/:id/products/:id)
+    var groupId = url.split('/')[2];
+    var productId = url.split('/')[4];
+    var product = DataModel.updateProduct(params);
+    return [201, product, { Location: '/groups/' + groupId + '/products/' + productId}];
+  });
+
+  $httpBackend.whenDELETE(/\/groups\/\d+\/products\/\d+$/).respond(function(method, url, data) {
+    // parse the matching URL to pull out the id (/groups/:id/products/:id)
+    var groupId = url.split('/')[2];
+    var productId = url.split('/')[4];
+
+    DataModel.deleteProduct(groupId, productId);
+
+    return [204, {}, {}];
   });
 
 
