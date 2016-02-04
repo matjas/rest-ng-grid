@@ -148,7 +148,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
 
   // add a new data item that does not exist already
   // must compute a new unique id and backfill in
-  this.addOne = function(dataItem) {
+  this.addGroupHttp = function(dataItem) {
     // must calculate a unique ID to add the new data
     var newId = this.newId();
     dataItem = dataItem || {name: 'NewGroup', id: null}

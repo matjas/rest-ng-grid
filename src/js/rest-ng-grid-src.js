@@ -78,6 +78,22 @@
 
           return q.promise
         },
+        save: function (url, data) {
+          var that = this,
+            q = $q.defer();
+          $http.post(url, data).then(function successCallback(response) {
+              if (response) {
+                q.resolve(response)
+              }
+            }, function errorCallback(response) {
+              if (response) {
+                q.reject(response);
+              }
+            }
+          );
+
+          return q.promise
+        },
         update: function (url, data) {
           var that = this,
             q = $q.defer();
@@ -233,7 +249,10 @@
             console.log('handle error');
           });
         } else if(this.apiUrl.save){
-          console.log('create internal');
+          var url = dataService.urlBuilder(mjGridCtrl.apiUrl.save, $scope.params);
+          mjGridCtrl.dataService.save(url, item).then(function (response) {
+            $scope.items.push(response.data);
+          });
         }
       };
 

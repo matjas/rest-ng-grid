@@ -27,7 +27,7 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
   $httpBackend.whenPOST('/groups').respond(function(method, url, data) {
     var params = angular.fromJson(data);
 
-    var group = DataModel.addOne(params);
+    var group = DataModel.addGroupHttp(params);
 
     // get the id of the new resource to populate the Location field
     var groupId = group.groupId;
