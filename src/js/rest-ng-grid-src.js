@@ -129,7 +129,8 @@
       var url = "";
       this.orderBy = this.options.columns.orderBy;
       this.parentId = this.options.dataSource.parentId || 'id';
-      this.itemId = this.options.dataSource.itemId;
+      this.itemId = this.options.dataSource.itemId || 'id';
+      this.childItemId = this.options.dataSource.childItemId;
 
       this.addColumns = function (scope, options) {
 
@@ -193,8 +194,8 @@
         if(mjGridCtrl.isTranscluded){
           item.isOpen = !item.isOpen;
           if (item.isOpen) {
-            if(mjGridCtrl.itemId){
-              $scope.params[mjGridCtrl.itemId] = item.id;
+            if(mjGridCtrl.childItemId){
+              $scope.params[mjGridCtrl.childItemId] = item[mjGridCtrl.itemId];
             }
             $scope.params = deepMerge(item, $scope.params);
             $rootScope.$broadcast('clickRow', {id: item[mjGridCtrl.parentId]});
@@ -203,7 +204,7 @@
       };
 
       var onRowClickListener = $rootScope.$on('clickRow', function (event, data) {
-        if ($scope.$parent.parentItem && $scope.$parent.parentItem.id === data.id) {
+        if ($scope.$parent.parentItem && $scope.$parent.parentItem[mjGridCtrl.itemId] === data.id) {
           $scope.params = $scope.$parent.params;
           getQuery($scope.params);
         }
@@ -233,12 +234,22 @@
       }
 
       var onNewRowListener = $rootScope.$on('addNewRow', function (event, data) {
-        if ($scope.$parent.parentItem && $scope.$parent.parentItem.id === data.item[mjGridCtrl.parentId]) {
-          if (!$scope.items) {
-            clearArray($scope.items)
+          //console.log($scope.$parent.parentItem, '$scope.$parent.parentItem.id');
+          //console.log(data.item, 'data.item');
+          //console.log(mjGridCtrl.parentId, 'mjGridCtrl.parentId');
+          if ($scope.$parent.parentItem && $scope.$parent.parentItem[mjGridCtrl.itemId] === data.item[mjGridCtrl.parentId]) {
+            if(!data.isExternal){
+              if (!$scope.items) {
+                clearArray($scope.items)
+              }
+              $scope.items.push(data.item);
+            }else if(mjGridCtrl.apiUrl.save) {
+              var url = dataService.urlBuilder(mjGridCtrl.apiUrl.save, $scope.params);
+              mjGridCtrl.dataService.save(url, data.item).then(function (response) {
+                $scope.items.push(response.data);
+              });
+            }
           }
-          $scope.items.push(data.item);
-        }
       });
 
       this.addItem = function (item) {
@@ -256,12 +267,18 @@
         }
       };
 
-      this.addChildItem = function (item) {
-        $scope.addChildRow(item).then(function (item) {
-          $rootScope.$broadcast('addNewRow', {item: item});
-        }, function () {
-          console.log('handle error');
-        });
+      this.addChildItem = function (parentItem) {
+        if($scope.addChildRow && this.isTranscluded){
+          $scope.addChildRow(parentItem).then(function (item) {
+            $rootScope.$broadcast('addNewRow', {item: item, isExternal: false});
+          }, function () {
+            console.log('handle error');
+          });
+        } else if(this.isTranscluded){
+          var item ={};
+          item[mjGridCtrl.childItemId] = parentItem[mjGridCtrl.itemId];
+          $rootScope.$broadcast('addNewRow', {item: item, isExternal: true});
+        }
       };
 
       this.editItem = function (item) {
@@ -292,7 +309,7 @@
             return false;
           });
         } else if(that.apiUrl.delete){
-          $scope.params[mjGridCtrl.itemId] = item.id;
+          $scope.params[mjGridCtrl.childItemId] = item[mjGridCtrl.itemId];
           var url = dataService.urlBuilder(mjGridCtrl.apiUrl.delete, $scope.params);
           mjGridCtrl.dataService.delete(url).then(function (response) {
             var idx = $scope.items.indexOf(item);
@@ -382,9 +399,9 @@
           newScope.parentItem = $scope.$eval(attributes.currentItem);
           newScope.params = $scope.$eval(attributes.params);
           transclude(newScope, function (clone, scope) {
-            clone.length > 0 ? mjGridCtrl.isTranscluded = true : mjGridCtrl.isTranscluded = false;
             element.empty();
             element.append(clone);
+            clone.length > 0 ? mjGridCtrl.isTranscluded = true : mjGridCtrl.isTranscluded = false;
             transclusionScope = scope;
             transcludedContent = clone;
           });

@@ -102,16 +102,28 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
   this.addGroup = function(){
     var q = $q.defer(),
         that = this,
-        lastId = getLastId(that.dataGroups);
+        newId = this.newId(that.dataGroups);
     $timeout(function(){
       var newGroup = {
-        id: lastId + 1,
-        name: 'NewGroup' + (lastId + 1)
+        id: newId,
+        name: 'NewGroup' + newId
       };
       that.dataGroups.push(newGroup);
       q.resolve(newGroup);
     },500);
     return q.promise
+  };
+
+  // add a new data item that does not exist already
+  // must compute a new unique id and backfill in
+  this.addGroupHttp = function(dataItem) {
+    // must calculate a unique ID to add the new data
+    var newId = this.newId(this.dataGroups);
+    dataItem = dataItem || {name: 'NewGroup', id: null};
+    dataItem.id = newId;
+    this.dataGroups.push(dataItem);
+    //this.dataGroups.push(dataItem);
+    return dataItem;
   };
 
   this.findOne = function(groupId) {
@@ -146,24 +158,6 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
     });
   };
 
-  // add a new data item that does not exist already
-  // must compute a new unique id and backfill in
-  this.addGroupHttp = function(dataItem) {
-    // must calculate a unique ID to add the new data
-    var newId = this.newId();
-    dataItem = dataItem || {name: 'NewGroup', id: null}
-    dataItem.id = newId;
-    //this.dataGroups.push(dataItem);
-    return dataItem;
-  };
-
-  // return an id to insert a new data item at
-  this.newId = function() {
-    var lastId = getLastId(this.getData());
-    // increment by one
-    return lastId + 1;
-  };
-
   this.updateGroup = function(dataItem) {
     // find the game that matches that id
     var groups = this.getData();
@@ -196,11 +190,43 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
   };
 
   // Products
+  this.getProductList = function() {
+    return this.dataGroupProducts;
+  };
+
   this.findAllProducts = function(groupId) {
     return _.filter(this.dataGroupProducts, {groupId: groupId});
   };
 
+  this.addProductHttp = function(groupId, dataItem) {
+    // must calculate a unique ID to add the new data
+    var newId = this.newId(this.dataGroupProducts);
+    dataItem = {id: newId, name: 'NewProduct', groupId: groupId, reference: "REF-NEW", quantity: 10, price: 222};
+    dataItem.id = newId;
+    this.dataGroupProducts.push(dataItem);
+    return dataItem;
+  };
+
+  this.addProduct = function(groupId){
+    var q = $q.defer(),
+      that = this,
+      newId = this.newId(this.dataGroupProducts);
+    $timeout(function(){
+      var newProduct = {id: newId, name: 'NewProduct', groupId: groupId, reference: "REF-NEW", quantity: 10, price: 222};
+      that.dataGroupProducts.push(newProduct);
+      q.resolve(newProduct);
+    },500);
+    return q.promise
+  };
+
   //Helpers
+  // return an id to insert a new data item at
+  this.newId = function(collection) {
+    var lastId = getLastId(collection);
+    // increment by one
+    return lastId + 1;
+  };
+
   function getLastId(collection) {
     var lastId = 0;
     _.forEach(collection, function(elm){

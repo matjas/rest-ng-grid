@@ -61,6 +61,16 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
     return q.promise;
   };
 
+  //PRODUCTS
+  $scope.addProduct = function(parentItem){
+    var q = $q.defer();
+    $scope.dataModel.addProduct(parentItem.id).then(function(result){
+      q.resolve(result);
+    });
+    return q.promise;
+  };
+
+  //GRID OPTIONS
   $scope.productsGridOptions = {
     hierarchy: true,
     dataSource: {
@@ -68,12 +78,13 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
       transport: {
         get: "",
         query: "/groups/{groupId}/products",
-        save: "",
+        save: "/groups/{groupId}/products",
         update: "../../api/tenants/quotations/{quotationId}/quotationCategories/{categoryId}/quotationLines/{quotationLineId}",
         "delete": "../../api/tenants/quotations/{quotationId}/quotationCategories/{categoryId}/quotationLines/{quotationLineId}"
       },
       parentId: "groupId",
-      itemId: "productId"
+      itemId: "id",
+      childItemId: ""
     },
     isEditable: true,
     columns: {
@@ -129,7 +140,9 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         delete: "/groups/{groupId}"
       },
       //arrayListParam: '',
-      itemId: "groupId"
+      parentId: "",
+      itemId: "id",
+      childItemId: "groupId"
     },
     isEditable: true,
     columns: {
