@@ -1,65 +1,138 @@
-<div class="mj-grid" data-ng-class="{'no-title': mjGridCtrl.titleList.length == 0}">
+<div  data-ng-style="{{ restNgGridCtrl.options.style }}" class="mj-grid {{ restNgGridCtrl.options.gridClass }}"
+	  data-ng-class="{'no-title':
+restNgGridCtrl.titleList.length == 0}">
 	<div class="mj-grid-header">
-		<div class="mj-grid-header-wrap">
-			<table role="grid" data-ng-if="mjGridCtrl.titleList.length > 0" class="table table-responsive out">
-				<thead role="rowgroup">
-				<tr role="row">
-					<th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"
-							data-ng-repeat="t in mjGridCtrl.titleList">
-						{{ t.title }}
-					</th>
-					<th class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">
-					</th>
-				</tr>
-				</thead>
-			</table>
-		</div>
+		<div class="mj-grid-header-wrap"></div>
 	</div>
 	<div class="mj-grid-content">
 		<!--{{ $id }}-->
 		<table role="grid" class="table table-responsive out">
+			<thead role="rowgroup" data-ng-if="restNgGridCtrl.titleList.length > 0">
+			<tr role="row">
+				<th ng-style="{{ t.style }}" colspan="{{ t.colspan }}" role="columnheader"
+					data-ng-repeat="t in restNgGridCtrl.titleList">
+					<span ng-show="t.title[localeId]">{{ t.title[localeId] }}</span>
+					<span ng-show="!t.title[localeId]">{{ t.title }}</span>
+				</th>
+				<th class="text-right"
+					data-ng-if="(restNgGridCtrl.apiUrl.save || restNgGridCtrl.apiUrl.update || restNgGridCtrl.apiUrl.delete) && !isReadOnly">
+					<a data-ng-if="restNgGridCtrl.apiUrl.save" href="" ng-click="restNgGridCtrl.addItem()"><i class="fa fa-plus"></i></a>
+				</th>
+			</tr>
+			</thead>
 			<tbody role="rowgroup">
 			<tr class="m-master"
-					data-ng-repeat-start="item in items" data-ng-click="mjGridCtrl.toggleRow($event, item)">
-				<td ng-style="{{ c.style }}" colspan="{{ c.colspan }}"
-						data-ng-repeat="c in mjGridCtrl.columnList">
-					<span data-ng-if="mjGridCtrl.isTranscluded && $index == 0" class="sub fa"
-								data-ng-class="{'fa-plus-square-o': !item.isOpen, 'fa-minus-square-o': item.isOpen}"></span>
-					<!--<p data-ng-if="mjGridCtrl.isTranscluded && $index == 0">-->
-						<!--&lt;!&ndash;{{ item }}&ndash;&gt;-->
-						<!--<span><strong>{{ mjGridCtrl.getProperty(item, c.group) }} &nbsp;</strong></span>-->
-					<!--</p>-->
-					<span>
-						{{ mjGridCtrl.getValue(item, c.field, c.filter) }}
-					</span>
-				</td>
-				<td class="w-30" data-ng-if="mjGridCtrl.apiUrl.save || mjGridCtrl.apiUrl.update || mjGridCtrl.apiUrl.delete">
-					<div class="dropdown right" dropdown>
-						<a href=""  class="dropdown-toggle" dropdown-toggle>
-							<i class="fa fa-cogs small"></i>
-						</a>
-						<ul class="dropdown-menu extended small">
-							<li data-ng-if="mjGridCtrl.apiUrl.save">
-								<a href="" data-ng-click="mjGridCtrl.addItem(item)"><span class="fa fa-plus"></span> Add </a>
-							</li>
-							<li data-ng-if="mjGridCtrl.apiUrl.update">
-								<a href="" data-ng-click="mjGridCtrl.editItem(item)"><span class="fa fa-pencil"></span> Edit</a>
-							</li>
-							<li data-ng-if="mjGridCtrl.apiUrl.delete">
-								<a href="" data-ng-click="mjGridCtrl.deleteItem(item)"><span class="fa fa-times"></span>Delete</a>
+				data-ng-repeat-start="item in items" data-ng-class="{'active': currentItem.id == item.id}">
+				<td ng-style="{{ c.style }}" colspan="{{ c.colspan }}" data-ng-click="restNgGridCtrl.selectRow($event, item, c)"
+					data-ng-repeat="c in restNgGridCtrl.columnList">
+					<a href=""
+					   data-ng-if="(((item[restNgGridCtrl.options.childCount] > 0 || item.children.length > 0) ||
+						(!item[restNgGridCtrl.options.childCount] && item[restNgGridCtrl.options.childCount] != 0)) && $index == 0 &&
+						restNgGridCtrl.isTranscluded)"
+					   class="sub fa"
+					   data-ng-click="restNgGridCtrl.toggleRow($event, item)"
+					   data-ng-class="{'fa-plus-square-o': !item.isOpen, 'fa-minus-square-o': item.isOpen}">&nbsp;</a>
+					<span
+							data-ng-if="(item[restNgGridCtrl.options.childCount] == 0 && $index == 0 && restNgGridCtrl.isTranscluded) ||
+							(restNgGridCtrl.options.dataSource.type == 'tree' && item.children.length == 0 && $index == 0)"
+							class="sub fa fa-square-o">&nbsp;</span>
+
+					<div class="cell-content">
+						<span data-ng-if="restNgGridCtrl.checkIfContent(item, c)">
+							<span data-ng-if="!c.link">{{ restNgGridCtrl.getValue(item, c.field, c.filter, c.visibility) }}</span>
+							<a data-ng-if="c.link" data-ng-click="restNgGridCtrl.onCellLinkClick(item, c.field, c.link)" >{{
+								restNgGridCtrl.getValue(item,
+									c.field,
+									c.filter,
+									c.visibility) }}</a>
+						</span>
+						<span data-ng-if="restNgGridCtrl.checkIfEdit(item, c)">
+							<input data-ng-change="restNgGridCtrl.changeCellEvent(item, c)" type="{{ c.type }}" class="form-control
+							input-sm" data-ng-model="item[c.field]" name="{{ c.inputName }}" ng-value="{{ c.radioValue }}"
+								   data-ng-required="c.validation.required" />
+						</span>
+						<ul class="mj-children" data-ng-if="item[restNgGridCtrl.options.childrenParam]">
+							<li  data-ng-repeat="itemCh in item[restNgGridCtrl.options.childrenParam]">
+								<!--{{ restNgGridCtrl.getValue(itemCh, c.field, c.filter) }}-->
+								<rest-grid-children collection="[itemCh]" field="c.field" filter="c.filter"
+												  options="{childrenParam:'children'}" />
+
+
 							</li>
 						</ul>
 					</div>
 				</td>
+				<td class="dropdown-menu-td" data-ng-if="(restNgGridCtrl.apiUrl.save || restNgGridCtrl.apiUrl.update ||
+        restNgGridCtrl.apiUrl.delete) &&
+        !isReadOnly">
+					<div data-ng-if="restNgGridCtrl.options.rowOptions == 'dropdown'" class="dropdown right" uib-dropdown>
+						<a href=""  class="dropdown-toggle" uib-dropdown-toggle>
+							<i class="fa fa-cogs small"></i>
+						</a>
+						<ul class="dropdown-menu extended small" uib-dropdown-menu>
+							<li data-ng-if="restNgGridCtrl.apiUrl.save && addChildRow && restNgGridCtrl.isTranscluded">
+								<a href="" data-ng-click="restNgGridCtrl.addChildItem(item, $event)"><span class="fa fa-plus"></span> Add</a>
+							</li>
+							<li data-ng-if="restNgGridCtrl.apiUrl.update">
+								<a href="" data-ng-click="restNgGridCtrl.editItem(item, $event)"><span class="fa fa-pencil"></span> Edit</a>
+							</li>
+							<li data-ng-if="restNgGridCtrl.apiUrl.delete">
+								<a href="" data-ng-click="restNgGridCtrl.deleteItem(item, $event)"><span class="fa fa-times"></span>Delete
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div data-ng-if="(restNgGridCtrl.options.rowOptions == 'inline') && !isReadOnly" class="list-options no-drp">
+						<button data-ng-if="restNgGridCtrl.inlineMode.id == item.id"
+								class="h-r"
+								data-ng-click="restNgGridCtrl.cancelEditMode(item)">
+							<span class="fa fa-close"></span>
+						</button>
+						<button data-ng-if="restNgGridCtrl.inlineMode.id == item.id"
+								class="h-r"
+								data-ng-click="restNgGridCtrl.saveRow(item, $event)">
+							<span class="fa fa-check"></span>
+						</button>
+
+						<button data-ng-if="restNgGridCtrl.apiUrl.save && addChildRow && restNgGridCtrl.isTranscluded && !restNgGridCtrl.inlineMode.id"
+								uib-tooltip-popup-delay="100"
+								uib-tooltip="Add child"
+								tooltip-placement="bottom"
+								class="h-r"
+								data-ng-click="restNgGridCtrl.addChildItem(item, $event)">
+							<span class="fa fa-plus"></span>
+						</button>
+						<button data-ng-if="restNgGridCtrl.apiUrl.update && !restNgGridCtrl.inlineMode.id &&
+						restNgGridCtrl.checkIfRowEditable(item)"
+								uib-tooltip-popup-delay="100"
+								uib-tooltip="Edit"
+								tooltip-placement="bottom"
+								class="h-r"
+								data-ng-click="restNgGridCtrl.editItem(item, $event)">
+							<span class="fa fa-pencil"></span>
+						</button>
+						<button data-ng-if="restNgGridCtrl.apiUrl.delete && !restNgGridCtrl.inlineMode.id" uib-tooltip-popup-delay="100"
+								uib-tooltip="Delete"
+								tooltip-placement="bottom"
+								class="h-r"
+								data-ng-click="restNgGridCtrl.deleteItem(item, $event)">
+							<span class="fa fa-times"></span>
+						</button>
+					</div>
+
+
+				</td>
 			</tr>
-			<tr data-ng-show="mjGridCtrl.isTranscluded && item.isOpen" class="m-detail"
-					data-ng-repeat-end>
-				<td colspan="{{ mjGridCtrl.titleList.length + 1 }}" my-transclude current-item="item"
-						params="params"></td>
+			<tr data-ng-show="restNgGridCtrl.isTranscluded && item.isOpen"
+				class="m-detail"
+				data-ng-repeat-end>
+				<td colspan="{{ restNgGridCtrl.titleLength + 2}}" rest-ng-grid-transclude current-item="item"
+					params="params">&nbsp;</td>
 			</tr>
 			</tbody>
 		</table>
-		<!--<a data-ng-click="mjGridCtrl.checkList()">check</a>-->
 	</div>
-	<div class="mj-grid-footer"></div>
+	<div id="mj-footer" class="mj-grid-footer" ng-include="restNgGridCtrl.options.footer">
+
+	</div>
 </div>
