@@ -1,7 +1,7 @@
 {
   "name": "rest-ng-grid",
-  "description": "",
-  "version": "0.0.2",
+  "description": "Angular.js (1.x) RESTful data grid",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/matjas/rest-ng-grid.git"
@@ -9,7 +9,8 @@
   "keywords": [
     "angular",
     "rest-ng-grid",
-    "angularjs"
+    "angularjs",
+    "grid"
   ],
   "authors": [
     "Maciej Jaskuła"
@@ -53,16 +54,12 @@
     "gulp-util": "^3.0.4",
     "gulp-webserver": "^0.9.0",
     "gulp.spritesmith": "^3.5.3",
-    "gulp-angular-templatecache": "^1.6.0",
     "lodash": "^2.4.1",
     "merge-stream": "^0.1.6",
     "path": "^0.11.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
 
-    "chai": "^2.3.0",
-    "chai-as-promised": "^4.1.1",
-    "coffee-script": "^1.10.0",
     "gulp-protractor": "latest",
     "jasmine-core": "^2.2.0",
     "karma": "^0.12.36",
