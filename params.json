@@ -1,0 +1,6 @@
+{
+  "name": "Rest-ng-grid",
+  "tagline": "",
+  "body": "#rest-ng-grid\r\n=================\r\n\r\n**rest-ng-grid** is a dat grid module for AngularJS(1.x). This is native AngularJs implementation, no jQuery. Module allows\r\ndisplay and manage data from different resources, create parent-child grid with different columns name and different sources.\r\n\r\nModule is during development, don't use in commercial projects\r\n\r\n## Author\r\n**Maciej Jaskula**\r\n\r\n## Copyright\r\nCopyright © 2014 [Maciej Jaskula](https://twitter.com/matjaskula).\r\n\r\n## License \r\nrest-ng-grid is under MIT license - http://www.opensource.org/licenses/mit-license.php\r\n\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
