@@ -162,7 +162,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
     // find the game that matches that id
     var groups = this.getData();
     var match = null;
-    dataItem.name = "UpdatedGroup";
+
     for (var i=0; i < groups.length; i++) {
       if(groups[i].id == dataItem.id) {
         match = groups[i];
@@ -223,7 +223,7 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
     // find the game that matches that id
     var products = this.getProductList();
     var match = null;
-    dataItem.name = "UpdatedProduct";
+    
     for (var i=0; i < products.length; i++) {
       if(products[i].id == dataItem.id) {
         match = products[i];

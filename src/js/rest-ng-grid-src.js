@@ -119,9 +119,9 @@
         }
       }])
       .controller('RestNgGridCtrl', ['$rootScope', '$scope', '$element', '$attrs', '$compile',
-        'restNgGridConfig', 'restNgGridService', '$uibModal', '$resource', '$filter', '$locale',
+        'restNgGridConfig', 'restNgGridService', '$uibModal', '$resource', '$filter', '$locale', '$templateCache',
         function ($rootScope, $scope, $element, $attrs, $compile,
-                  restNgGridConfig, restNgGridService, $uibModal, $resource, $filter, $locale) {
+                  restNgGridConfig, restNgGridService, $uibModal, $resource, $filter, $locale, $templateCache) {
           // This array keeps track of the columns
           var restNgGridCtrl = this;
           this.gId = guid();
@@ -439,7 +439,7 @@
           this.deleteRow = function (item) {
             var url = "";
             return $uibModal.open({
-              templateUrl: 'templates/partials/directives/delete.html',
+              templateUrl: $templateCache.get('rest-ng-grid-delete.html'),
               controller: restNgGridCtrl.ModalInstanceDelete,
               animation: false,
               backdrop: true,

@@ -4,6 +4,7 @@
 .mj-grid{
   //overflow-x: auto;
   .dropdown-menu-td{text-align: right;}
+  .options-col{width:90px;}
   .mj-grid{
     overflow-x: visible;
   }
@@ -11,6 +12,15 @@
     > thead{
       > tr{
         > th{border-bottom: none;}
+      }
+    }
+  }
+  .list-options{float: right;
+    button{padding: 0 5px;color: #999;  }
+    &.no-drp{
+      button{background-color: transparent; border: none;
+        &:first-child{margin-right: 2px;}
+        span{font-size: 15px;}
       }
     }
   }

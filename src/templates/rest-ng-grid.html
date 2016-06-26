@@ -14,7 +14,7 @@ restNgGridCtrl.titleList.length == 0}">
 					<span ng-show="t.title[localeId]">{{ t.title[localeId] }}</span>
 					<span ng-show="!t.title[localeId]">{{ t.title }}</span>
 				</th>
-				<th class="text-right"
+				<th class="text-right options-col"
 					data-ng-if="(restNgGridCtrl.apiUrl.save || restNgGridCtrl.apiUrl.update || restNgGridCtrl.apiUrl.delete) && !isReadOnly">
 					<a data-ng-if="restNgGridCtrl.apiUrl.save" href="" ng-click="restNgGridCtrl.addItem()"><i class="fa fa-plus"></i></a>
 				</th>

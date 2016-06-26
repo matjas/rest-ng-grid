@@ -107,13 +107,15 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         get: "",
         query: "/groups/{groupId}/products",
         save: "/groups/{groupId}/products",
-        update: "/groups/{groupId}/products/{productId}",
-        delete: "/groups/{groupId}/products/{productId}"
+        update: "/groups/{groupId}/products/{productId}"
+        //delete: "/groups/{groupId}/products/{productId}"
       },
       parentId: "groupId",
       itemId: "productId"
     },
     isEditable: true,
+    editMode: "inline",
+    rowOptions: "inline",
     columns: {
 
       /*titles: [
@@ -136,19 +138,25 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
           colspan: 0,
           style: {
             'width': '30%'
-          }
+          },
+          type: 'text',
+          validation: {required: true},
+          isEditable: true
         }, {
           field: ['quantity'],
           colspan: 0,
           style: {
-            'width': '20%',
+            'width': '15%',
             'text-align': 'right'
-          }
+          },
+          type: 'number',
+          validation: {required: true, min: 0, step: 1},
+          isEditable: true
         }, {
           field: ['price'],
           colspan: 0,
           style: {
-            'width': '20%',
+            'width': '15%',
             'text-align': 'right'
           }
         }
@@ -163,14 +171,16 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         get: "",
         query: "/groups",
         save: "/groups",
-        update: "/groups/{groupId}",
-        delete: "/groups/{groupId}"
+        update: "/groups/{groupId}"
+        //delete: "/groups/{groupId}"
       },
       //arrayListParam: '',
       parentId: "",
       itemId: "groupId"
     },
     isEditable: true,
+    editMode: "inline",
+    rowOptions: "inline",
     columns: {
       titles: [
         {
@@ -189,13 +199,13 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
           title: 'Qte',
           colspan: 0,
           style: {
-            'width': '20%'
+            'width': '15%'
           }
         },{
           title: 'Price',
           colspan: 0,
           style: {
-            'width': '20%'
+            'width': '15%'
           }
         }
 
@@ -203,7 +213,10 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
       fields: [
         {
           field: 'name',
-          colspan: 4
+          colspan: 4,
+          type: 'text',
+          validation: {required: true},
+          isEditable: true
         }
       ]
     }
