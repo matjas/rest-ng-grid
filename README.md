@@ -6,6 +6,9 @@ display and manage data from different resources, create parent-child grid with 
 
 Module is during development, don't use in commercial projects
 
+## Demo
+Visit (http://matjas.github.io/rest-ng-grid/)
+
 ## Author
 **Maciej Jaskula**
 
