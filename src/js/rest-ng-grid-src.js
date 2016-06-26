@@ -118,9 +118,9 @@
           }
         }
       }])
-      .controller('RestNgGridCtrl', ['$rootScope', '$scope', '$element', '$attrs', '$compile', '$transclude',
+      .controller('RestNgGridCtrl', ['$rootScope', '$scope', '$element', '$attrs', '$compile',
         'restNgGridConfig', 'restNgGridService', '$uibModal', '$resource', '$filter', '$locale',
-        function ($rootScope, $scope, $element, $attrs, $compile, $transclude,
+        function ($rootScope, $scope, $element, $attrs, $compile,
                   restNgGridConfig, restNgGridService, $uibModal, $resource, $filter, $locale) {
           // This array keeps track of the columns
           var restNgGridCtrl = this;
