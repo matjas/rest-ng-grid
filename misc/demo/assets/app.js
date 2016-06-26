@@ -1,2 +1,2 @@
-angular.module('restNgGrid.demo', ['ngMockE2E', 'ngResource','ui.bootstrap', 'mjAngularGrid']);
+angular.module('restNgGrid.demo', ['ngMockE2E', 'ngResource','ui.bootstrap', 'restNgGrid']);
 

@@ -111,9 +111,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         delete: "/groups/{groupId}/products/{productId}"
       },
       parentId: "groupId",
-      itemId: "id",
-      childItemId: "",
-      paramId: "productId"
+      itemId: "productId"
     },
     isEditable: true,
     columns: {
@@ -170,9 +168,7 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
       },
       //arrayListParam: '',
       parentId: "",
-      itemId: "id",
-      childItemId: "groupId",
-      paramId: "groupId"
+      itemId: "groupId"
     },
     isEditable: true,
     columns: {
