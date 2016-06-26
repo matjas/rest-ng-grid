@@ -80,5 +80,9 @@
     "should": "^6.0.3",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.6.0"
+  },
+
+  "scripts": {
+    "postinstall": "node_modules/.bin/webdriver-manager update --standalone"
   }
 }

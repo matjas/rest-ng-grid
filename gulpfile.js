@@ -219,12 +219,13 @@ gulp.task('webdriver_update', webdriver_update);
 //gulp.task('webdriver_standalone', webdriver_standalone);
 
 gulp.task('test:e2e', ['webdriver_update'], function () {
-    gulp.src(["test/e2e/**/*spec.js", "test/e2e/**/*spec.coffee"])
+    gulp.src(["test/e2e/**/*spec.js"])
         .pipe(protractor({
-            configFile: "test/protractor-e2e.conf.js",
-            args: ['--baseUrl', 'http://localhost:9264']
+            configFile: "protractor-e2e.conf.js",
+            args: ['--baseUrl', 'http://localhost:63342']
         }))
         .on('error', function (e) {
+            console.log(e, 'error');
             throw e
         })
 });

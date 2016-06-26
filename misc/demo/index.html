@@ -36,10 +36,10 @@
         <h1>Angular REST data grid</h1>
         <div>
           <p>
-            <button class="btn btn-primary" ng-click="getGroups()">Get Groups</button>
+            <button data-hook="getData" class="btn btn-primary" ng-click="getGroups()">Get Groups</button>
             <!--<button class="btn btn-primary" ng-click="addNewGroup()">Add new group</button>-->
           </p>
-          <rest-ng-grid options="groupsGridOptions" iXtems="dataGroups"
+          <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" iXtems="dataGroups"
                    params="sourceParams" get-data-trigger="load.groups" add-row="addNewGroup"
                    add-child-row="addProduct" update-row="updateGroup" delete-row="deleteGroup" >
             <rest-ng-grid options="productsGridOptions"  update-row="updateProduct" delete-row="deleteProduct" ></rest-ng-grid>
