@@ -19,12 +19,11 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     filter = require('gulp-filter'),
     cache = require('gulp-cached'),
-    templateCache = require('gulp-angular-templatecache'),
+    ngHtml2Js = require("gulp-ng-html2js"),
     merge = require('merge-stream'),
     path = require('path'),
     size = require('gulp-size'),
     htmlmin = require('gulp-htmlmin'),
-    ngAnnotate = require('browserify-ngannotate'),
     protractor = require("gulp-protractor").protractor,
     webdriver_standalone = require("gulp-protractor").webdriver_standalone,
     webdriver_update = require("gulp-protractor").webdriver_update;
@@ -84,7 +83,7 @@ gulp.task('clean', function (cb) {
 
 gulp.task('build-app', function () {
 
-  return gulp.src(['./src/js/rest-ng-grid-src.js'])
+  return gulp.src(['./src/js/rest-ng-grid-src.js', './src/tmp/*.js'])
     .pipe(gulpIf(sourceMap, sourcemaps.init({loadMaps: true})))
     .pipe(gp_concat('rest-ng-grid.js'))
     //.pipe(gulpIf(isProduction, cachebust.resources()))
@@ -96,33 +95,44 @@ gulp.task('build-app', function () {
 });
 
 gulp.task('html', function () {
-  var tplFilterList = [],
-      tplFilter = filter(tplFilterList),
-      staticFilter = [ '**/*'],
-      cachedTplFilter = null;
-
-  for(var i=0; i < tplFilterList.length; i ++){
-    staticFilter.push("!"+ tplFilterList[i]);
-  }
-  for(var j=0; j < cachedTemplates.length; j ++){
-    staticFilter.push("!" + cachedTemplates[j]);
-  }
-  staticFilter = filter(staticFilter);
-  cachedTplFilter = filter(cachedTemplates);
-
-  return gulp.src(htmlPath)
-      .pipe(cache('html'))
+  gulp.src(htmlPath)
       .pipe(isProduction ? htmlmin({collapseWhitespace: true}) : gutil.noop())
-      //.pipe(tplFilter)
-      //.pipe(gulp.dest('dist/templates/'))
-      //.pipe(tplFilter.restore());
-      //.pipe(cachedTplFilter)
-      //.pipe(gulp.dest('tmp/cached_templates/'))
-      //.pipe(cachedTplFilter.restore())
-      //.pipe(staticFilter)
-      .pipe(gulp.dest('./misc/demo'))
-      .pipe(gulp.dest('./dist/'));
+      .pipe(ngHtml2Js({
+        moduleName: "restNgGrid"
+      }))
+      .pipe(gulpIf(isProduction, uglify())).on('error', gutil.log)
+      .pipe(gp_concat("templates.js"))
+      .pipe(gulp.dest('./src/tmp'));
 });
+
+// gulp.task('html', function () {
+//   var tplFilterList = [],
+//       tplFilter = filter(tplFilterList),
+//       staticFilter = [ '**/*'],
+//       cachedTplFilter = null;
+//
+//   for(var i=0; i < tplFilterList.length; i ++){
+//     staticFilter.push("!"+ tplFilterList[i]);
+//   }
+//   for(var j=0; j < cachedTemplates.length; j ++){
+//     staticFilter.push("!" + cachedTemplates[j]);
+//   }
+//   staticFilter = filter(staticFilter);
+//   cachedTplFilter = filter(cachedTemplates);
+//
+//   return gulp.src(htmlPath)
+//       .pipe(cache('html'))
+//       .pipe(isProduction ? htmlmin({collapseWhitespace: true}) : gutil.noop())
+//       //.pipe(tplFilter)
+//       //.pipe(gulp.dest('dist/templates/'))
+//       //.pipe(tplFilter.restore());
+//       //.pipe(cachedTplFilter)
+//       //.pipe(gulp.dest('tmp/cached_templates/'))
+//       //.pipe(cachedTplFilter.restore())
+//       //.pipe(staticFilter)
+//       .pipe(gulp.dest('./misc/demo'))
+//       .pipe(gulp.dest('./dist/'));
+// });
 
 
 gulp.task('css', function () {
