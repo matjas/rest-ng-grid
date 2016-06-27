@@ -107,8 +107,8 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         get: "",
         query: "/groups/{groupId}/products",
         save: "/groups/{groupId}/products",
-        update: "/groups/{groupId}/products/{productId}"
-        //delete: "/groups/{groupId}/products/{productId}"
+        update: "/groups/{groupId}/products/{productId}",
+        delete: "/groups/{groupId}/products/{productId}"
       },
       parentId: "groupId",
       itemId: "productId"
@@ -171,8 +171,8 @@ angular.module('restNgGrid.demo').controller('MainCtrl',['$scope', 'Resource', '
         get: "",
         query: "/groups",
         save: "/groups",
-        update: "/groups/{groupId}"
-        //delete: "/groups/{groupId}"
+        update: "/groups/{groupId}",
+        delete: "/groups/{groupId}"
       },
       //arrayListParam: '',
       parentId: "",
