@@ -439,7 +439,7 @@
           this.deleteRow = function (item) {
             var url = "";
             return $uibModal.open({
-              templateUrl: $templateCache.get('rest-ng-grid-delete.html'),
+              template: $templateCache.get('rest-ng-grid-delete.html'),
               controller: restNgGridCtrl.ModalInstanceDelete,
               animation: false,
               backdrop: true,

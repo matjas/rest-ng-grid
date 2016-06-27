@@ -40,8 +40,10 @@ var basePaths = {
 
 var jsPath = ['src/js/**/*.js'],
     htmlPath = 'src/templates/*.html',
-    cssPath = 'src/less/rest-ng-grid.less',
+    cssPath = ['src/less/rest-ng-grid.less'],
+    cssDemoPath = ['misc/demo/assets/styles/**/*.less'],
     cssWatchPath = 'src/less/**/*.less',
+    cssDemoWatchPath = 'misc/demo/assets/styles/**/*.less',
     demoWatchPath = 'misc/demo/**/*.*'
 
 // == ENVIRONMENT STRINGS ========
@@ -134,7 +136,22 @@ gulp.task('html', function () {
 //       .pipe(gulp.dest('./dist/'));
 // });
 
-
+gulp.task('cssDemo', function () {
+    return gulp.src(cssDemoPath)
+        .pipe(gulpIf(sourceMap, sourcemaps.init({loadMaps: true})))
+        .pipe(less()).on('error', function (err) {
+            new gutil.PluginError('CSS', err, {showStack: true});
+        })
+        //.pipe(gulpIf(isProduction, cachebust.resources()))
+        .pipe(autoprefixer({
+            browsers: ['last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'],
+            cascade: false
+        }))
+        .pipe(isProduction ? cssmin() : gutil.noop())
+        .pipe(gulpIf(sourceMap, sourcemaps.write('./')))
+        .pipe(size())
+        .pipe(gulp.dest('./misc/demo/assets/styles/'));
+});
 gulp.task('css', function () {
     return gulp.src(cssPath)
         .pipe(gulpIf(sourceMap, sourcemaps.init({loadMaps: true})))
@@ -161,6 +178,9 @@ gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map']), func
 gulp.task('livereload:notify:css', gulpsync.sync(['css', 'copy:css', 'copy:map']), function () {
     return livereload.changed('*')
 });
+gulp.task('livereload:notify:cssDemo', gulpsync.sync(['cssDemo']), function () {
+    return livereload.changed('*')
+});
 gulp.task('livereload:notify:demo', [], function () {
     return livereload.changed('*')
 });
@@ -174,6 +194,9 @@ gulp.task('watch', ['build'], function () {
         changeEvent(evt);
     });
     gulp.watch(cssWatchPath, ['livereload:notify:css']).on('change', function (evt) {
+        changeEvent(evt);
+    });
+    gulp.watch(cssDemoWatchPath, ['livereload:notify:cssDemo']).on('change', function (evt) {
         changeEvent(evt);
     });
     gulp.watch(demoWatchPath, ['livereload:notify:demo']).on('change', function (evt) {
@@ -263,4 +286,4 @@ gulp.task('copy', ['copy:css', 'copy:map'], function () {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('build', gulpsync.sync(['clean', 'css', 'build-app', 'html', 'copy']));
+gulp.task('build', gulpsync.sync(['clean', 'css', 'cssDemo', 'build-app', 'html', 'copy']));

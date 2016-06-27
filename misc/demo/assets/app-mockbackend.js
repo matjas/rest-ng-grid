@@ -87,7 +87,7 @@ angular.module('restNgGrid.demo').run(function($httpBackend, DataModel) {
 
 
   //$httpBackend.whenGET(/rest-ng-grid/).passThrough();
-  //$httpBackend.whenGET(/<div/).passThrough();
+  $httpBackend.whenGET(/^templates/).passThrough();
 
 
 });
