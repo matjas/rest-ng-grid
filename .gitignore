@@ -9,5 +9,7 @@ npm-debug.log
 
 template/**/*.js
 misc/demo/assets/*.map
+misc/demo/bower_components
 src/tmp/**/*.*
 .idea
+
