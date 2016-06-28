@@ -13,6 +13,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-mocks.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.1.2/ui-bootstrap-tpls.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.0.1/lodash.min.js"></script>
+    <script src="assets/lib/prettify.min.js"></script>
 
 
     <!--<link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">-->
@@ -22,99 +23,46 @@
 
 
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="demo/assets/demo.css"/>
-    <link rel="stylesheet" href="demo/assets/rest-ng-grid.css"/>
+    <link rel="stylesheet" href="assets/rest-ng-grid.css"/>
+    <link rel="stylesheet" href="assets/styles/prettify.css"/>
+    <link rel="stylesheet" href="assets/styles/demo.css"/>
 </head>
-<body>
-<div class="container">
-    <div class="row">
-        <section class="page-header">
-            <h1 class="project-name">Rest-ng-grid</h1>
-            <h2 class="project-tagline"></h2>
-            <a href="https://github.com/matjas/rest-ng-grid" class="btn">View on GitHub</a>
-            <a href="https://github.com/matjas/rest-ng-grid/zipball/master" class="btn">Download .zip</a>
-            <a href="https://github.com/matjas/rest-ng-grid/tarball/master" class="btn">Download .tar.gz</a>
-        </section>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+<body class="ng-cloak" ng-controller="MainCtrl">
+<section class="page-header">
+    <h1 class="project-name">rest-ng-grid</h1>
+    <h2 class="project-tagline"></h2>
+    <a href="https://github.com/matjas/rest-ng-grid" class="btn">View on GitHub</a>
+    <a href="https://github.com/matjas/rest-ng-grid/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/matjas/rest-ng-grid/tarball/master" class="btn">Download .tar.gz</a>
+</section>
+<div role="main">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 col-sm-3" ng-include="'templates/sidebar.html'">
 
-        </div>
-        <div class="col-md-8">
-            <section>
-                <h1>
-                    <a id="rest-ng-grid" class="anchor" href="#rest-ng-grid" aria-hidden="true"><span aria-hidden="true"
-                                                                                                      class="octicon octicon-link"></span></a>rest-ng-grid
-                </h1>
+            </div>
+            <div class="col-xs-8 col-sm-9">
+                <div ng-view>
 
-                <h1></h1>
-
-                <p><strong>rest-ng-grid</strong> is a dat grid module for AngularJS(1.x). This is native AngularJs implementation,
-                    no jQuery. Module allows
-                    display and manage data from different resources, create parent-child grid with different columns name and
-                    different sources.</p>
-
-                <p>Module is during development, don't use in commercial projects</p>
-
-                <h2>Demo</h2>
-
-                <div ng-controller="MainCtrl">
-                    <p>
-                        <button data-hook="getData" class="btn btn-primary" ng-click="getGroups()">Get Groups</button>
-                        <!--<button class="btn btn-primary" ng-click="addNewGroup()">Add new group</button>-->
-                    </p>
-                    <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" iXtems="dataGroups"
-                                  params="sourceParams" get-data-trigger="load.groups" add-row="addNewGroup"
-                                  add-child-row="addProduct" update-row="updateGroup" delete-row="deleteGroup" >
-                        <rest-ng-grid options="productsGridOptions"  update-row="updateProduct" delete-row="deleteProduct" ></rest-ng-grid>
-                    </rest-ng-grid>
                 </div>
-                <h2>
-                    <a id="author" class="anchor" href="#author" aria-hidden="true"><span aria-hidden="true"
-                                                                                          class="octicon octicon-link"></span></a>Author
-                </h2>
-
-                <p><strong>Maciej Jaskula</strong></p>
-
-                <h2>
-                    <a id="copyright" class="anchor" href="#copyright" aria-hidden="true"><span aria-hidden="true"
-                                                                                                class="octicon octicon-link"></span></a>Copyright
-                </h2>
-
-                <p>Copyright © 2014 <a href="https://twitter.com/matjaskula">Maciej Jaskula</a>.</p>
-
-                <h2>
-                    <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true"
-                                                                                            class="octicon octicon-link"></span></a>License
-                </h2>
-
-                <p>rest-ng-grid is under MIT license - <a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a>
-                </p>
-
-                <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/matjas/rest-ng-grid">Rest-ng-grid</a> is maintained by <a
-                href="https://github.com/matjas">matjas</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a
-                href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a
-                href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-                </footer>
-
-            </section>
+            </div>
         </div>
-    </div>
-</div>
+    </div><!-- /.container -->
+</div><!-- /.main -->
 
 
 
 </body>
-<script src="demo/assets/rest-ng-grid.js"></script>
-<script src="demo/assets/app.js"></script>
-<script src="demo/assets/app-mockbackend.js"></script>
-<script src="demo/assets/services/DataModel.js"></script>
-<script src="demo/assets/services/Http.js"></script>
-<script src="demo/assets/services/Resource.js"></script>
-<script src="demo/assets/app-controller.js"></script>
+<script src="assets/directives/plunker.js"></script>
+<script src="assets/directives/angular-bootstrap-prettify.js"></script>
+<script src="assets/rest-ng-grid.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/app-mockbackend.js"></script>
+<script src="assets/services/DataModel.js"></script>
+<script src="assets/services/Http.js"></script>
+<script src="assets/services/Resource.js"></script>
+<script src="assets/app-controller.js"></script>
+<script src="assets/controllers/basic-usage.js"></script>
+
 </html>

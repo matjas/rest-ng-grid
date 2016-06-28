@@ -4,15 +4,18 @@ angular.module('restNgGrid.demo').service('DataModel',[ '$timeout', '$q', functi
   this.dataGroups = [
     {
       id: 1,
-      name: "RTV"
+      name: "RTV",
+      reference: "Ref1"
     },
     {
       id: 2,
-      name: "AGD"
+      name: "AGD",
+      reference: "Ref2"
     },
     {
       id: 3,
-      name: "Computers"
+      name: "Computers",
+      reference: "Ref3"
     }
   ];
   this.dataGroupProducts = [

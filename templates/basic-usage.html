@@ -1,0 +1,176 @@
+<h1>Basic usage</h1>
+<div class="row">
+    <div class="col-md-12">
+        <p class="lead">restNgGrid is RESTful angular(1.x) grid with no jQuery dependencies. It allow nest one grid in another and
+         make dependencies make dependencies between parent and child.</p>
+        <h4>How to use it?</h4>
+        <p>Follow these steps</p>
+        <ol>
+            <li><p>include restNgGrid in script and css</p>
+                <pre class="prettyprint linemus" ng-set-html="step1" >
+                </pre>
+            </li>
+            <li>
+                <p>include restNgGrid as a dependency in your app</p>
+                <pre class="prettyprint linemus" ng-set-text="step2" >
+                </pre>
+            </li>
+            <li>
+                <p>add array data to $scope</p>
+                <pre class="prettyprint linemus" ng-set-text="step3" >
+                </pre>
+            </li>
+            <li>
+                <p>create options to grid. Fields array contains displayed parameters from data. Titles refers to columns name.</p>
+                <pre class="prettyprint linemus" ng-set-text="step4" >
+                </pre>
+            </li>
+            <li>
+                <p>use the rest-ng-grid directive and assign data "items" attribute</p>
+                <pre class="prettyprint linemus" ng-set-text="index.html-1" >
+                </pre>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <!--<div class="col-md-6">-->
+        <!--<div ui-codemirror="codemirrorOptionsJs" ng-model="codeJs" ui-refresh='isSomething'></div>-->
+        <!--<uib-tabset>-->
+            <!--<uib-tab heading="Markup">-->
+                <!--<div ui-codemirror="codemirrorOptionsJs" ng-model="codeJs" ui-refresh='isSomething'>-->
+                <!--</div>-->
+            <!--</uib-tab>-->
+        <!--</uib-tabset>-->
+    <!--</div>-->
+
+    <div class="col-md-12" ng-controller="PlunkerCtrl"
+         ng-init="
+vendor_css=['https://github.com/matjas/rest-ng-grid/tree/master/misc/demo/assets/styles/demo.css'];
+vendor_js=['https://github.com/matjas/rest-ng-grid/tree/master/misc/demo/assets/app.js'];
+      "
+    >
+        <h2>Example</h2>
+        <!--<div class="pull-right">-->
+            <!--<button class="btn btn-info" ng-click="edit('1.4.9', 'restNgGrid', 'rest-ng-grid')">-->
+                <!--<i class="glyphicon glyphicon-edit"></i> Edit in plunker-->
+            <!--</button>-->
+        <!--</div>-->
+
+        <uib-tabset>
+            <uib-tab heading="index.html">
+                <div plunker-content="index.html">
+                    <pre class="prettyprint lang-html" ng-set-text="index.html-1" ng-html-wrap="app angular.js app.js rest-ng-grid.js ui-bootstrap-tpls.min.js rest-ng-grid.css"></pre>
+                </div>
+            </uib-tab>
+            <uib-tab heading="app.js">
+                <div plunker-content="app.js">
+                    <pre class="prettyprint lang-javascript" ng-set-text="app.js"></pre>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Demo</h3>
+        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" items="dataGroups"></rest-ng-grid>
+    </div>
+</div>
+<script type="text/ng-template" id="step1">
+    &lt;link rel="stylesheet" href="assets/rest-ng-grid.css"/>
+    &lt;script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js">&lt;/script>
+    &lt;script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-resource.min.js">&lt;/script>
+    &lt;script src="assets/rest-ng-grid.js">&lt;/script>
+</script>
+<script type="text/ng-template" id="step2">
+    var app = angular.module('app', ['restNgGrid']);
+</script>
+<script type="text/ng-template" id="step3">
+    $scope.dataGroups = [
+        {
+            id: 1,
+            name: "RTV",
+            reference: "Ref1"
+        },
+        {
+            id: 2,
+            name: "AGD",
+            reference: "Ref2"
+        },
+    ];
+</script>
+<script type="text/ng-template" id="step4">
+    //GRID OPTIONS
+    $scope.groupsGridOptions = {
+        columns: {
+            titles: [
+                {
+                    title: 'Name'
+                }
+                {
+                    title: 'Reference'
+                }
+            ],
+            fields: [
+                {
+                    field: 'name'
+                },
+                {
+                    field: 'reference'
+                }
+            ]
+        }
+    };
+</script>
+<script type="text/ng-template" id="index.html-1">
+    <div ng-controller="MainCtrl">
+        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" items="dataGroups"></rest-ng-grid>
+    </div>
+</script>
+<script type="text/ng-template" id="app.js">
+    var app = angular.module('app', ['restNgGrid']);
+
+    app.controller('MainCtrl', ['$scope', function ($scope) {
+        $scope.dataGroups = [
+            {
+                id: 1,
+                name: "RTV",
+                reference: "Ref1"
+            },
+            {
+                id: 2,
+                name: "AGD",
+                reference: "Ref2"
+            },
+            {
+                id: 3,
+                name: "Computers",
+                reference: "Ref3"
+            }
+        ];
+
+        //GRID OPTIONS
+        $scope.groupsGridOptions = {
+            columns: {
+                titles: [
+                    {
+                        title: 'Name'
+                    }
+                    {
+                        title: 'Reference'
+                    }
+                ],
+                fields: [
+                    {
+                        field: 'name'
+                    }
+                    {
+                        field: 'reference'
+                    }
+                ]
+            }
+        };
+    }]);
+</script>
