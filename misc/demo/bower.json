@@ -1,0 +1,17 @@
+{
+  "name": "Demo for rest-ng-grid",
+  "description": "Angular.js (1.x) RESTful data grid",
+  "authors": [
+    "Maciej Jaskuła"
+  ],
+  "license": "MIT",
+  "directories": {
+    "lib": "/"
+  },
+  "main": "index.html",
+  "dependencies": {
+    "angular-bootstrap": "~1.3.3",
+    "angular-ui-codemirror": "latest",
+    "google-code-prettify": "latest"
+  }
+}
