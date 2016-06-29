@@ -98,7 +98,7 @@ gulp.task('build-app', function () {
 
 gulp.task('build-demo-app', function () {
 
-    return gulp.src(['./src/js/rest-ng-grid-src.js',
+    return gulp.src([
         './misc/demo/assets/directives/**/*.js',
         './misc/demo/assets/app.js',
         './misc/demo/assets/app-mockbackend.js',
