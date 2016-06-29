@@ -39,6 +39,7 @@ var basePaths = {
 };
 
 var jsPath = ['src/js/**/*.js'],
+    jsDemoPath = ['misc/demo/assets/**/*.js'],
     htmlPath = 'src/templates/*.html',
     cssPath = ['src/less/rest-ng-grid.less'],
     cssDemoPath = ['misc/demo/assets/styles/**/*.less'],
@@ -108,7 +109,7 @@ gulp.task('build-demo-app', function () {
         .pipe(gp_concat('demo.js'))
         //.pipe(gulpIf(isProduction, cachebust.resources()))
         //.pipe(gulpIf(sourceMap, sourcemaps.write('./')))
-        .pipe(gulpIf(isProduction, uglify())).on('error', gutil.log)
+        //.pipe(gulpIf(isProduction, uglify())).on('error', gutil.log)
         .pipe(gulp.dest('./misc/demo/assets'));
 
 });
@@ -189,7 +190,10 @@ gulp.task('css', function () {
 gulp.task('livereload:notify:html', gulpsync.sync(['html']), function () {
     return livereload.changed('*')
 });
-gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map', 'build-demo-app']), function () {
+gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map']), function () {
+    return livereload.changed('*')
+});
+gulp.task('livereload:notify:jsDemo', gulpsync.sync(['build-demo-app']), function () {
     return livereload.changed('*')
 });
 gulp.task('livereload:notify:css', gulpsync.sync(['css', 'copy:css', 'copy:map']), function () {
@@ -205,6 +209,9 @@ gulp.task('livereload:notify:demo', [], function () {
 gulp.task('watch', ['build'], function () {
     livereload.listen();
     gulp.watch(jsPath, ['livereload:notify:js']).on('change', function (evt) {
+        changeEvent(evt);
+    });
+    gulp.watch(jsDemoPath, ['livereload:notify:jsDemo']).on('change', function (evt) {
         changeEvent(evt);
     });
     gulp.watch(htmlPath, ['livereload:notify:html']).on('change', function (evt) {
