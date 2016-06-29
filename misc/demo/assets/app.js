@@ -13,6 +13,10 @@ angular.module('restNgGrid.demo').config(['$locationProvider', '$routeProvider',
         templateUrl: 'templates/binding-local.html',
         controller: 'BindingLocal',
         controllerAs: 'bindingLocal'
+    }).when('/tutorial/binding/remote', {
+        templateUrl: 'templates/binding-remote.html',
+        controller: 'BindingRemote',
+        controllerAs: 'bindingRemote'
     }).otherwise('/tutorial')
 }]);
 
