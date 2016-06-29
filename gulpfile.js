@@ -96,6 +96,23 @@ gulp.task('build-app', function () {
 
 });
 
+gulp.task('build-demo-app', function () {
+
+    return gulp.src(['./src/js/rest-ng-grid-src.js',
+        './misc/demo/assets/directives/**/*.js',
+        './misc/demo/assets/app.js',
+        './misc/demo/assets/app-mockbackend.js',
+        './misc/demo/assets/controllers/**/*.js',
+        './misc/demo/assets/services/**/*.js'])
+        //.pipe(gulpIf(sourceMap, sourcemaps.init({loadMaps: true})))
+        .pipe(gp_concat('demo.js'))
+        //.pipe(gulpIf(isProduction, cachebust.resources()))
+        //.pipe(gulpIf(sourceMap, sourcemaps.write('./')))
+        .pipe(gulpIf(isProduction, uglify())).on('error', gutil.log)
+        .pipe(gulp.dest('./misc/demo/assets'));
+
+});
+
 gulp.task('html', function () {
     gulp.src(htmlPath)
         .pipe(isProduction ? htmlmin({collapseWhitespace: true}) : gutil.noop())
@@ -172,7 +189,7 @@ gulp.task('css', function () {
 gulp.task('livereload:notify:html', gulpsync.sync(['html']), function () {
     return livereload.changed('*')
 });
-gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map']), function () {
+gulp.task('livereload:notify:js', gulpsync.sync(['build-app', 'copy:map', 'build-demo-app']), function () {
     return livereload.changed('*')
 });
 gulp.task('livereload:notify:css', gulpsync.sync(['css', 'copy:css', 'copy:map']), function () {
@@ -286,4 +303,4 @@ gulp.task('copy', ['copy:css', 'copy:map'], function () {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('build', gulpsync.sync(['clean', 'css', 'cssDemo', 'build-app', 'html', 'copy']));
+gulp.task('build', gulpsync.sync(['clean', 'css', 'cssDemo', 'build-app', 'build-demo-app', 'html', 'copy']));
