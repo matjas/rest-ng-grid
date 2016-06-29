@@ -1,36 +1,11 @@
-<h1>Basic usage</h1>
+<h1>Binding to remote data</h1>
 <div class="row">
     <div class="col-md-12">
-        <p class="lead">restNgGrid is RESTful angular(1.x) grid with no jQuery dependencies. It allow nest one grid in another and
-         make dependencies between parent and child.</p>
-        <h4>How to use it?</h4>
-        <p>Follow these steps</p>
-        <ol>
-            <li><p>include restNgGrid in script and css</p>
-                <pre class="prettyprint linemus" ng-set-html="step1" >
-                </pre>
-            </li>
-            <li>
-                <p>include restNgGrid as a dependency in your app</p>
-                <pre class="prettyprint linemus" ng-set-text="step2" >
-                </pre>
-            </li>
-            <li>
-                <p>add array data to $scope</p>
-                <pre class="prettyprint linemus" ng-set-text="step3" >
-                </pre>
-            </li>
-            <li>
-                <p>create options to grid. Fields array contains displayed parameters from data. Titles refers to columns name.</p>
-                <pre class="prettyprint linemus" ng-set-text="step4" >
-                </pre>
-            </li>
-            <li>
-                <p>use the rest-ng-grid directive and assign data "items" attribute</p>
-                <pre class="prettyprint linemus" ng-set-text="index.html-1" >
-                </pre>
-            </li>
-        </ol>
+        <p class="lead">restNgGrid supports data binding display either from local or remote data storage</p>
+        <p>For remote data binding you need to specify URL in <code>dataSource.transport.query</code> parameter for <code>options</code>
+         attribute of the grid</p>
+        <p>In this example rest-ng-grid fetches data using URL defined in <code>dataSource.transport.query</code> parameter. To fill
+        the grid set <code>get-data-trigger</code> expression to be true.</p>
     </div>
 </div>
 <div class="row">
@@ -75,58 +50,17 @@ vendor_js=['https://github.com/matjas/rest-ng-grid/tree/master/misc/demo/assets/
 <div class="row">
     <div class="col-md-12">
         <h3>Demo</h3>
-        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" items="dataGroups"></rest-ng-grid>
+        <p>
+            <button data-hook="getData" class="btn btn-primary" ng-click="getGroups()">Get data</button>
+        </p>
+
+        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" get-data-trigger="load.groups"></rest-ng-grid>
     </div>
 </div>
-<script type="text/ng-template" id="step1">
-    &lt;link rel="stylesheet" href="assets/rest-ng-grid.css"/>
-    &lt;script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js">&lt;/script>
-    &lt;script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-resource.min.js">&lt;/script>
-    &lt;script src="assets/rest-ng-grid.js">&lt;/script>
-</script>
-<script type="text/ng-template" id="step2">
-    var app = angular.module('app', ['restNgGrid']);
-</script>
-<script type="text/ng-template" id="step3">
-    $scope.dataGroups = [
-        {
-            id: 1,
-            name: "RTV",
-            reference: "Ref1"
-        },
-        {
-            id: 2,
-            name: "AGD",
-            reference: "Ref2"
-        },
-    ];
-</script>
-<script type="text/ng-template" id="step4">
-    //GRID OPTIONS
-    $scope.groupsGridOptions = {
-        columns: {
-            titles: [
-                {
-                    title: 'Name'
-                }
-                {
-                    title: 'Reference'
-                }
-            ],
-            fields: [
-                {
-                    field: 'name'
-                },
-                {
-                    field: 'reference'
-                }
-            ]
-        }
-    };
-</script>
+
 <script type="text/ng-template" id="index.html-1">
     <div ng-controller="MainCtrl">
-        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" items="dataGroups"></rest-ng-grid>
+        <rest-ng-grid data-hook="groupGrid" options="groupsGridOptions" get-data-trigger="load.groups"></rest-ng-grid>
     </div>
 </script>
 <script type="text/ng-template" id="app.js">
@@ -153,6 +87,11 @@ vendor_js=['https://github.com/matjas/rest-ng-grid/tree/master/misc/demo/assets/
 
         //GRID OPTIONS
         $scope.groupsGridOptions = {
+            dataSource: {
+                transport: {
+                    query: "/groups"
+                }
+            },
             columns: {
                 titles: [
                     {
